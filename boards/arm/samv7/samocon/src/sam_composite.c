@@ -32,7 +32,7 @@
 #include <assert.h>
 #include <debug.h>
 
-#include "samv71-xult.h"
+#include "samocon.h"
 
 #if defined(CONFIG_BOARDCTL_USBDEVCTRL) && defined(CONFIG_USBDEV_COMPOSITE)
 
