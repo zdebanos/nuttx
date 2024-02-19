@@ -37,7 +37,7 @@
 #include "chip.h"
 #include "sam_gpio.h"
 #include "sam_spi.h"
-#include "samv71-xult.h"
+#include "samocon.h"
 
 #ifdef CONFIG_SAMV7_SPI
 
@@ -56,32 +56,10 @@
 void sam_spidev_initialize(void)
 {
 #ifdef CONFIG_SAMV7_SPI0_MASTER
-  /* Make sure that the EDBG DIGI_SPI CS is high so that it does not
-   * interfere
-   */
-
-  sam_configgpio(CLICK_EDBG_CS);
-
-#ifdef CONFIG_SAMV71XULT_MB1_SPI
-  /* Enable chip select for mikroBUS1 */
-
-  sam_configgpio(CLICK_MB1_CS);
-#endif
-
-#ifdef CONFIG_SAMV71XULT_MB2_SPI
-  /* Enable chip select for mikroBUS2 */
-
-  sam_configgpio(CLICK_MB2_CS);
-
-#endif
-
-#ifdef CONFIG_LCD_ST7789
-  /* Enable CS and CMD/DATA for LCD */
-
-  sam_configgpio(SPI0_NPCS1);
-  sam_configgpio(GPIO_LCD_CD);
-#endif
-
+  /* Configure CSs for SPI0 peripheral */
+  sam_configgpio(GPIO_SPI0_CS0);
+  sam_configgpio(GPIO_SPI0_CS1);
+  sam_configgpio(GPIO_SPI0_CS2);
 #endif /* CONFIG_SAMV7_SPI0_MASTER */
 
 #ifdef CONFIG_SAMV7_SPI0_SLAVE
