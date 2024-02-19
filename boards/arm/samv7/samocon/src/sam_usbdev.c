@@ -34,7 +34,7 @@
 
 #include "arm_internal.h"
 #include "sam_gpio.h"
-#include "samv71-xult.h"
+#include "samocon.h"
 
 /****************************************************************************
  * Pre-processor Definitions

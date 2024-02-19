@@ -28,7 +28,7 @@
 
 #include "nuttx/board.h"
 
-#include "samv71-xult.h"
+#include "samocon.h"
 
 #if defined(CONFIG_USBMSC)
 
