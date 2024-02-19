@@ -46,7 +46,7 @@
 #include <nuttx/video/fb.h>
 
 #include "sam_twihs.h"
-#include "samv71-xult.h"
+#include "samocon.h"
 
 
 #ifdef HAVE_HSMCI
