@@ -32,7 +32,7 @@
 #include <arch/board/board.h>
 
 #include "sam_mcan.h"
-#include "samv71-xult.h"
+#include "samocon.h"
 
 #ifdef CONFIG_SAMV7_MCAN
 
@@ -91,6 +91,7 @@ int sam_can_setup(void)
   return OK;
 #else
   return -ENODEV;
+#endif /* if defined(MCAN0) && defined(MCAN1) */
 }
 
 #endif /* CONFIG_SAMV7_MCAN */
