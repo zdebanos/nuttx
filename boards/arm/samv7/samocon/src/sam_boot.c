@@ -36,7 +36,7 @@
 #include "arm_internal.h"
 #include "sam_start.h"
 #include "sam_pck.h"
-#include "samv71-xult.h"
+#include "samocon.h"
 
 /****************************************************************************
  * Public Functions
