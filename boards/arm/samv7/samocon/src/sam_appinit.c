@@ -31,7 +31,7 @@
 #include <arch/board/board.h>
 
 #include "sam_uid.h"
-#include "samv71-xult.h"
+#include "samocon.h"
 
 #ifdef CONFIG_BOARDCTL
 
