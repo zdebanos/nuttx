@@ -33,6 +33,7 @@
 #  define CONFIG_DEBUG_NET 1
 #endif
 
+#include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include <errno.h>
@@ -83,19 +84,20 @@
  * Name: sam_emac0_phy_enable
  ****************************************************************************/
 
-#ifdef CONFIG_SAMV7_GPIOA_IRQ
+#ifdef CONFIG_SAMV7_GPIOC_IRQ
 static void sam_emac0_phy_enable(bool enable)
 {
+  
   phyinfo("IRQ%d: enable=%d\n", IRQ_EMAC0_INT, enable);
   if (enable)
     {
       sam_gpioirqenable(IRQ_EMAC0_INT);
-      sam_gpiowrite(GPIO_EMAC0_LINK_LEND, true);
+      sam_gpiowrite(GPIO_EMAC0_LINK_LED, true);
     }
   else
     {
       sam_gpioirqdisable(IRQ_EMAC0_INT);
-      sam_gpiowrite(GPIO_EMAC0_LINK_LEND, false);
+      sam_gpiowrite(GPIO_EMAC0_LINK_LED, false);
     }
 }
 #endif
@@ -115,9 +117,10 @@ static void sam_emac0_phy_enable(bool enable)
 void weak_function sam_netinitialize(void)
 {
   /* Configure the PHY interrupt GPIO */
-  phyinfo("Configuring %08x\n", GPIO_EMAC0_INT);
+  phyinfo("sam_netinitialize: configuring %08x\n", GPIO_EMAC0_INT);
   sam_configgpio(GPIO_EMAC0_INT);
   sam_configgpio(GPIO_EMAC0_LINK_LED);
+  sam_gpiowrite(GPIO_EMAC0_LINK_LED, true);
 }
 
 /****************************************************************************
@@ -133,10 +136,10 @@ void weak_function sam_netinitialize(void)
 int sam_emac0_setmac(void)
 {
   // Hardcoded temporarily!
-  uint8_t mac[6] = {0x5f, 0x5d, 0x8a, 0x55, 0xbd, 0xef};
+  uint8_t mac[6] = {0x00, 0x5d, 0x8a, 0x55, 0xbd, 0xef};
   int ret;
 
-  ninfo("MAC: %02x:%02x:%02x:%02x:%02x:%02x\n",
+  printf("MAC: %02x:%02x:%02x:%02x:%02x:%02x\n",
         mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
   /* Now configure the EMAC driver to use this MAC address */
@@ -215,7 +218,7 @@ int sam_emac0_setmac(void)
  *
  ****************************************************************************/
 
-#ifdef CONFIG_SAMV7_GPIOA_IRQ
+#ifdef CONFIG_SAMV7_GPIOC_IRQ
 int arch_phy_irq(const char *intf, xcpt_t handler, void *arg,
                  phy_enable_t *enable)
 {
