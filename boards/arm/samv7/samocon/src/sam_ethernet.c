@@ -87,17 +87,14 @@
 #ifdef CONFIG_SAMV7_GPIOC_IRQ
 static void sam_emac0_phy_enable(bool enable)
 {
-  
   phyinfo("IRQ%d: enable=%d\n", IRQ_EMAC0_INT, enable);
   if (enable)
     {
       sam_gpioirqenable(IRQ_EMAC0_INT);
-      sam_gpiowrite(GPIO_EMAC0_LINK_LED, true);
     }
   else
     {
       sam_gpioirqdisable(IRQ_EMAC0_INT);
-      sam_gpiowrite(GPIO_EMAC0_LINK_LED, false);
     }
 }
 #endif
@@ -139,7 +136,7 @@ int sam_emac0_setmac(void)
   uint8_t mac[6] = {0x00, 0x5d, 0x8a, 0x55, 0xbd, 0xef};
   int ret;
 
-  printf("MAC: %02x:%02x:%02x:%02x:%02x:%02x\n",
+  ninfo("MAC: %02x:%02x:%02x:%02x:%02x:%02x\n",
         mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
   /* Now configure the EMAC driver to use this MAC address */
