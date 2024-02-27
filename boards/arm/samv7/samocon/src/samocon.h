@@ -281,6 +281,34 @@
 /* PWMs */
 
 /* Quadrature Encoder Counters */
+/*
+ * TC0 and TC2 Timer/Counter peripherals are used. A, B are encoder signals,
+ * ID is the encoder index signal. A so-called mark used as a GPIO 
+ * can be used for another user-defined feedback signal
+ * but it's not necessary.
+ * 
+ *   --------- -------- ------
+ *   SaMoCon   SAMV71   SAMV71       
+ *   Pin       Function Pin
+ *   --------- -------- ------  
+ *   IRCA_A    TIOA6    PC5
+ *   IRCA_B    TIOB6    PC6
+ *   IRCA_ID   TIOB7    PC9
+ *   IRCA_MARK GPIO     PA10
+ *   IRCB_A    TIOA0    PA0
+ *   IRCB_B    TIOB0    PA1
+ *   IRCB_ID   TIOB1    PA16
+ *   IRCB_MARK GPIO     PC16
+ *
+ */
+
+/* No need to define any timer pins. Already defined in samv71_pinmap.h */
+#define IRCA_TC      2
+#define IRCA_DEVPATH "/dev/qe0"
+#define IRCB_TC      0
+#define IRCB_DEVPATH "/dev/qe1"
+#define GPIO_IRCA_MARK (GPIO_INPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOA | GPIO_PIN10)
+#define GPIO_IRCB_MARK (GPIO_INPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOC | GPIO_PIN16)
 
 /* GPIO Hall Sensors Inputs
  *
@@ -365,7 +393,7 @@
 #  undef HAVE_W25QXXXJV
 #endif
 
-#if !defined(CONFIG_SAMV7_SPI0_MASTER) || !defined(CONFIG_SAMV7_SPIO1_SLAVE)
+#if !defined(CONFIG_SAMV7_SPI0_MASTER) && !defined(CONFIG_SAMV7_SPI0_SLAVE)
 #  undef HAVE_W25QXXXJV
 #  warning "SPI0 not selected! Can't have W25Q32JV spi flash!!"
 #endif
@@ -500,95 +528,12 @@ void sam_netinitialize(void);
 int sam_emac0_setmac(void);
 #endif
 
-/****************************************************************************
- * Name: sam_at24config
- *
- * Description:
- *   Create an AT24xx-based MTD configuration device for storage device
- *   configuration information.
- *
- ****************************************************************************/
-
-#ifdef HAVE_MTDCONFIG
-int sam_at24config(void);
+#ifdef HAVE_QENC_FEEDBACK
+int sam_qencs_initialize(void);
 #endif
 
-/****************************************************************************
- * Name: sam_tsc_setup
- *
- * Description:
- *   This function is called by board-bringup logic to configure the
- *   touchscreen device.  This function will register the driver as
- *   /dev/inputN where N is the minor device number.
- *
- * Input Parameters:
- *   minor   - The input device minor number
- *
- * Returned Value:
- *   Zero is returned on success.  Otherwise, a negated errno value is
- *   returned to indicate the nature of the failure.
- *
- ****************************************************************************/
 
-#ifdef HAVE_MAXTOUCH
-int sam_tsc_setup(int minor);
-#endif
 
-/****************************************************************************
- * Name: sam_wm8904_initialize
- *
- * Description:
- *   This function is called by platform-specific, setup logic to configure
- *   and register the WM8904 device.  This function will register the driver
- *   as /dev/wm8904[x] where x is determined by the minor device number.
- *
- * Input Parameters:
- *   minor - The input device minor number
- *
- * Returned Value:
- *   Zero is returned on success.  Otherwise, a negated errno value is
- *   returned to indicate the nature of the failure.
- *
- ****************************************************************************/
-
-#ifdef HAVE_WM8904
-int sam_wm8904_initialize(int minor);
-#endif /* HAVE_WM8904 */
-
-/****************************************************************************
- * Name: sam_audio_null_initialize
- *
- * Description:
- *   Set up to use the NULL audio device for PCM unit-level testing.
- *
- * Input Parameters:
- *   minor - The input device minor number
- *
- * Returned Value:
- *   Zero is returned on success.  Otherwise, a negated errno value is
- *   returned to indicate the nature of the failure.
- *
- ****************************************************************************/
-
-#ifdef HAVE_AUDIO_NULL
-int sam_audio_null_initialize(int minor);
-#endif /* HAVE_AUDIO_NULL */
-
-/****************************************************************************
- * Name: stm32_mrf24j40_initialize
- *
- * Description:
- *   Initialize the MRF24J40 device.
- *
- * Returned Value:
- *   Zero is returned on success.  Otherwise, a negated errno value is
- *   returned to indicate the nature of the failure.
- *
- ****************************************************************************/
-
-#ifdef HAVE_MRF24J40
-int sam_mrf24j40_initialize(void);
-#endif
 
 #endif /* __ASSEMBLY__ */
 #endif /* __BOARDS_ARM_SAMV7_SAMV71_XULT_SRC_SAMV71_XULT_H */
