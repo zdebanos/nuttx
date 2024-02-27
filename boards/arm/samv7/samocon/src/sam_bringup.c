@@ -187,6 +187,17 @@ int sam_bringup(void)
     }
 #endif
 
+#ifdef HAVE_QENC_FEEDBACK
+  /* Configure quadrature encoder feedbacks */
+  {
+    int ret = sam_qencs_initialize();
+    //if (ret < 0)
+    //  {
+    //    printf("QENC init returned %d\n", ret);
+    //  }
+  }
+#endif
+
 #ifdef HAVE_MACADDR
   /* SAMV71-XULT reads the address from the AT24 eeprom.
    * In our case, sam_emac0_setmac sets a MAC address

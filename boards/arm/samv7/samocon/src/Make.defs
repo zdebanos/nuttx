@@ -52,6 +52,10 @@ ifeq ($(CONFIG_SAMV7_MCAN),y)
 CSRCS += sam_mcan.c
 endif
 
+ifeq ($(CONFIG_SENSORS_QENCODER),y)
+CSRCS += sam_qencs.c
+endif
+
 .PHONY = context distclean
 
 $(SCRIPTOUT): $(LDSCRIPT_TEMPLATE) $(CONFIGFILE)
