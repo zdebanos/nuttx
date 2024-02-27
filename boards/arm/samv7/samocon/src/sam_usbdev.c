@@ -64,6 +64,7 @@ void sam_usbinitialize(void)
    */
 
   sam_configgpio(GPIO_VBUSON);
+  sam_gpiowrite(GPIO_VBUSON, false);
 }
 
 /****************************************************************************
