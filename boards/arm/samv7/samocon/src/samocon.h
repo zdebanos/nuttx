@@ -39,46 +39,28 @@
 
 /* Configuration Logic ******************************************************/
 
+/* HSMCI (SD slot) define slot */
 
-#ifdef CONFIG_SAMV7_HSMCI0
-#   define HAVE_HSMCI        1
-#endif
+/* Can support HSMCI if the SD card is configured */
+#define HAVE_HSMCI          1
 
-//#define HAVE_AUTOMOUNTER     1
-#define HAVE_USB             1
-#define HAVE_USBDEV          1
-#define HAVE_USBMONITOR      1
-#define HAVE_HALL_FEEDBACK   1
-#define HAVE_QENC_FEEDBACK   1
-#define HAVE_I2C_24XXXX      1
-#define HAVE_W25QXXXJV       1
-#define HAVE_MAIN_SPI0       1
-#define HAVE_EXTERNAL_SPI1   1
-#define HAVE_EXTERNAL_3ADC   1
-#define HAVE_NETWORK         1
-#define HAVE_MACADDR         1
-#define HAVE_MTDCONFIG       1
-#define HAVE_PROGMEM_CHARDEV 1
-#define HAVE_I2CTOOL         1
-
-/* HSMCI */
-/* The SD_DET pin - detection of the inserted card */
-/* The SD_DET pin is at PC18 */
-
-/* Can't support MMC/SD if the card interface is not enabled */
-
-#if !defined(CONFIG_SAMV7_HSMCI0)
+#if defined(HAVE_HSMCI) && !defined(CONFIG_SAMV7_HSMCI0)
+#  warning "Enable HSMCI0 peripheral to support MMC/SD!"
 #  undef HAVE_HSMCI
 #endif
+//#define HAVE_AUTOMOUNTER     1
+
+/* The SD_DET pin - detection of the inserted card */
+/* The SD_DET pin is at PC18 */
 
 /* Can't support MMC/SD features if mountpoints are disabled */
 
 #if defined(HAVE_HSMCI) && defined(CONFIG_DISABLE_MOUNTPOINT)
-#  warning Mountpoints disabled.  No MMC/SD support
+#  warning Mountpoints disabled. No MMC/SD support
 #  undef HAVE_HSMCI
 #endif
 
-/* We need GPIO interrupts on GPIOD to support card detect interrupts */
+/* We need interrupts on GPIOC (PC18) to support card detect interrupts */
 
 #if defined(HAVE_HSMCI) && !defined(CONFIG_SAMV7_GPIOC_IRQ)
 #  warning GPIOC interrupts not enabled.  No MMC/SD support.
@@ -115,6 +97,10 @@
 #  undef HAVE_AUTOMOUNTER
 #endif
 
+/* USB define logic */
+#define HAVE_USB             1
+#define HAVE_USBDEV          1
+#define HAVE_USBMONITOR      1
 
 /* Check if we should enable the USB monitor before starting NSH */
 
@@ -134,25 +120,93 @@
 #  undef HAVE_USBMONITOR
 #endif
 
-/* Networking and AT24-based MTD config */
+/* CONFIG_SAMV7_UDP and CONFIG_USBDEV must be defined, or there is no USB
+ * device.
+ */
 
-#if !defined(CONFIG_NET) || !defined(CONFIG_SAMV7_EMAC)
+#if !defined(CONFIG_SAMV7_UDP) || !defined(CONFIG_USBDEV)
+#  undef HAVE_USB
+#  undef HAVE_USBDEV
+#endif
+
+/* Feedback define logic */
+#define HAVE_HALL_FEEDBACK   1
+#define HAVE_IRCA_FEEDBACK   1
+#define HAVE_IRCB_FEEDBACK   1
+
+/* Can't have A QENC feedback if pins are not defined */
+#if defined(HAVE_IRCA_FEEDBACK) && \
+    (!defined(CONFIG_SAMV7_TC0_TIOA0) || !defined(CONFIG_SAMV7_TC0_TIOB0) || \
+    !defined(CONFIG_SAMV7_TC0_TIOB1))
+#   warning "Enable TIOA0, TIOB0 and TIOB1 for QENC_A operation!"
+#   undef  HAVE_IRCA_FEEDBACK
+#endif
+
+#if defined(HAVE_IRCB_FEEDBACK) && \
+    (!defined(CONFIG_SAMV7_TC2_TIOA6) || !defined(CONFIG_SAMV7_TC2_TIOB6) || \
+    !defined(CONFIG_SAMV7_TC2_TIOB7))
+#   warning "Enable TIOA6, TIOB6 and TIOB7 for QENC_B operation!"
+#   undef  HAVE_IRCB_FEEDBACK
+#endif
+
+
+/* I2C define logic */
+#define HAVE_MAIN_I2C        1
+#define HAVE_EXTERNAL_I2C    1
+#define HAVE_24XXXX          1
+#define HAVE_I2CTOOL         1
+
+#if defined(HAVE_MAIN_I2C) && !defined(CONFIG_SAMV7_TWIHS1)
+#   warning "Configure CONFIG_SAMV7_TWIHS1 for main I2C peripheral."
+#   undef HAVE_MAIN_I2C
+#endif
+
+#if defined(HAVE_EXTERNAL_I2C) && !defined(CONFIG_SAMV7_TWIHS0)
+#   warning "Configure CONFIG_SAMV7_TWIHS0 for external I2C peripheral."
+#   undef HAVE_EXTERNAL_I2C
+#endif
+
+#if defined(HAVE_24XXXX) && !defined(HAVE_MAIN_I2C)
+#   warning "Define HAVE_MAIN_I2C in order to use 24XXXX memory."
+#   undef HAVE_24XXXX
+#endif
+
+/* SPI define logic */
+#define HAVE_W25QXXXJV       1
+#define HAVE_MAIN_SPI0       1
+#define HAVE_EXTERNAL_SPI1   1
+#undef HAVE_EXTERNAL_3ADC
+
+#ifdef CONFIG_SAMV7_QSPI
+#  error "Can't have QSPI on the SaMoCon board!!"
+#endif 
+
+#if defined(HAVE_W25QXXXJV) && !defined(CONFIG_MTD_W25QXXXJV)
+#  warning "Configure CONFIG_MTD_W25QXXXJV to use the W25 flash!"
+#  undef HAVE_W25QXXXJV
+#endif
+
+#if defined(HAVE_W25QXXXJV) && \
+    (!defined(CONFIG_SAMV7_SPI0_MASTER) && !defined(CONFIG_SAMV7_SPI0_SLAVE))
+#  undef HAVE_W25QXXXJV
+#  warning "SPI0 not selected! Can't have W25Q32JV!"
+#endif
+
+/* Network define logic */
+#define HAVE_NETWORK         1
+#define HAVE_HARDCODED_MAC   1
+
+#if defined(HAVE_HARDCODED_MAC)
+#   define HAVE_MACADDR
+#endif
+
+#if defined(HAVE_NETWORK) && \
+    (!defined(CONFIG_SAMV7_GPIOC_IRQ) || !defined(CONFIG_NET) || \
+    !defined(CONFIG_SAMV7_EMAC0))
+#  warning "Configure GPIOC_IRQ, CONFIG_NET and CONFIG_SAMV7_EMAC0 to use eth!"
 #  undef HAVE_NETWORK
-#  undef HAVE_MACADDR
 #endif
 
-#if !defined(CONFIG_SAMV7_TWIHS0) || !defined(CONFIG_MTD_AT24XX)
-#  undef HAVE_MACADDR
-#  undef HAVE_MTDCONFIG
-#endif
-
-#if defined(CONFIG_NSH_NOMAC) || !defined(CONFIG_AT24XX_EXTENDED)
-#  undef HAVE_MACADDR
-#endif
-
-#if !defined(CONFIG_MTD_CONFIG)
-#  undef HAVE_MTDCONFIG
-#endif
 
 /* procfs File System */
 
@@ -171,9 +225,6 @@
 #  undef HAVE_PROGMEM_CHARDEV
 #endif
 
-/* No Audio */
-
-/* No RTC */
 
 /* Do we need to register I2C drivers on behalf of the I2C tool? */
 
@@ -181,18 +232,6 @@
 #  undef HAVE_I2CTOOL
 #endif
 
-
-/* Ethernet *************************/
-
-/* PC25 is an interrupt from the onboard PHY.
- * That means GPIOC interrupts must be turned on.
- * PB13 pin is ETH_LED for LINK indication in the RJ45 connector.
- */
-
-#ifndef CONFIG_SAMV7_GPIOC_IRQ
-#  warning "GPIOC interrupts disabled. No ethernet PHY support!!"
-#  undef HAVE_NETWORK
-#endif
 
 /* Ethernet MAC.
  *
@@ -260,14 +299,6 @@
  * is at TODO
  */
 
-/* CONFIG_SAMV7_UDP and CONFIG_USBDEV must be defined, or there is no USB
- * device.
- */
-
-#if !defined(CONFIG_SAMV7_UDP) || !defined(CONFIG_USBDEV)
-#  undef HAVE_USB
-#  undef HAVE_USBDEV
-#endif
 
 #warning "Need to set up USB_OVERCURR in documentation!! Gitlab issue"
 #define GPIO_VBUSON (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_OUTPUT_SET | \
@@ -329,9 +360,6 @@
  *   HALL1_IN2 PD17   
  */
 
-#ifndef CONFIG_SAMOCON_HALL_FEEDBACK
-#  undef HAVE_HALL_FEEDBACK
-#endif
 
 #define HALL0_PORT_TYPE GPIO_PORT_PIOC
 #define HALL1_PORT_TYPE GPIO_PORT_PIOD
@@ -385,18 +413,6 @@
  *   SPI_CSMEM  PC28
  */
 
-#ifdef CONFIG_SAMV7_QSPI
-#  error "Can't have QSPI on the SaMoCon board!!"
-#endif 
-
-#ifndef CONFIG_MTD_W25QXXXJV
-#  undef HAVE_W25QXXXJV
-#endif
-
-#if !defined(CONFIG_SAMV7_SPI0_MASTER) && !defined(CONFIG_SAMV7_SPI0_SLAVE)
-#  undef HAVE_W25QXXXJV
-#  warning "SPI0 not selected! Can't have W25Q32JV spi flash!!"
-#endif
 
 #define W25QXXXJV_MEM_HOLD  (GPIO_OUTPUT | GPIO_CFG_PULLDOWN | GPIO_PORT_PIOD \
                              GPIO_PIN27)
@@ -528,11 +544,13 @@ void sam_netinitialize(void);
 int sam_emac0_setmac(void);
 #endif
 
-#ifdef HAVE_QENC_FEEDBACK
+#if defined(HAVE_IRCA_FEEDBACK) || defined(HAVE_IRCB_FEEDBACK)
 int sam_qencs_initialize(void);
 #endif
 
-
+#if defined(HAVE_MAIN_I2C) || defined(HAVE_EXTERNAL_I2C)
+int sam_i2c_init(void);
+#endif
 
 
 #endif /* __ASSEMBLY__ */
