@@ -14,26 +14,30 @@
 
 #ifdef CONFIG_SENSORS_QENCODER
 
-#ifdef HAVE_QENC_FEEDBACK
+#if defined(HAVE_IRCA_FEEDBACK) || defined(HAVE_IRCB_FEEDBACK)
 int sam_qencs_initialize(void)
 {
     int ret;
+#ifdef HAVE_IRCA_FEEDBACK
     ret = sam_qeinitialize(IRCA_DEVPATH, IRCA_TC);
     if (ret < 0)
       {
-        //printf("Failed to register %s\n", IRCA_DEVPATH);
-        return ret;
-      }
-    ret = sam_qeinitialize(IRCB_DEVPATH, IRCB_TC);
-    if (ret < 0)
-      {
-        //printf("Failed to register %s\n", IRCB_DEVPATH);
+        printf("Failed to register %s\n", IRCA_DEVPATH);
         return ret;
       }
     sam_configgpio(GPIO_IRCA_MARK);
+#endif
+#ifdef HAVE_IRCB_FEEDBACK
+    ret = sam_qeinitialize(IRCB_DEVPATH, IRCB_TC);
+    if (ret < 0)
+      {
+        printf("Failed to register %s\n", IRCB_DEVPATH);
+        return ret;
+      }
     sam_configgpio(GPIO_IRCB_MARK);
+#endif
     return OK;
 }
-#endif
+#endif // HAVE_IRCA_FEEDBACK || HAVE_IRCB_FEEDBACK
 
-#endif
+#endif // CONFIG_SENSORS_QENCODER
