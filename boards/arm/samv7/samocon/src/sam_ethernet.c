@@ -58,8 +58,6 @@
 
 #define SAMV7_EMAC0_DEVNAME "eth0"
 
-#define AT24XX_MACADDR_OFFSET 0x9a
-
 /* Debug ********************************************************************/
 
 /* Extra, in-depth debug output that is only available if
