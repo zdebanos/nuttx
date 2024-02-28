@@ -101,63 +101,6 @@ static const size_t g_mtd_partition_table_size =
  ****************************************************************************/
 
 /****************************************************************************
- * Name: sam_i2c_register
- *
- * Description:
- *   Register one I2C drivers for the I2C tool.
- *
- ****************************************************************************/
-
-#ifdef HAVE_I2CTOOL
-static void sam_i2c_register(int bus)
-{
-  struct i2c_master_s *i2c;
-  int ret;
-
-  i2c = sam_i2cbus_initialize(bus);
-  if (i2c == NULL)
-    {
-      syslog(LOG_ERR, "ERROR: Failed to get I2C%d interface\n", bus);
-    }
-  else
-    {
-      ret = i2c_register(i2c, bus);
-      if (ret < 0)
-        {
-          syslog(LOG_ERR, "ERROR: Failed to register I2C%d driver: %d\n",
-                 bus, ret);
-          sam_i2cbus_uninitialize(i2c);
-        }
-    }
-}
-#endif
-
-/****************************************************************************
- * Name: sam_i2ctool
- *
- * Description:
- *   Register I2C drivers for the I2C tool.
- *
- ****************************************************************************/
-
-#ifdef HAVE_I2CTOOL
-static void sam_i2ctool(void)
-{
-#ifdef CONFIG_SAMV7_TWIHS0
-  sam_i2c_register(0);
-#endif
-#ifdef CONFIG_SAMV7_TWIHS1
-  sam_i2c_register(1);
-#endif
-#ifdef CONFIG_SAMV7_TWIHS2
-  sam_i2c_register(2);
-#endif
-}
-#else
-#  define sam_i2ctool()
-#endif
-
-/****************************************************************************
  * Public Functions
  ****************************************************************************/
 
@@ -173,9 +116,12 @@ int sam_bringup(void)
 {
   int ret;
 
-  /* Register I2C drivers on behalf of the I2C tool */
 
-  sam_i2ctool();
+  /* Initialize all i2c buses. */
+#if defined(HAVE_MAIN_I2C) || defined(HAVE_EXTERNAL_I2C)
+  ret = sam_i2c_init();
+  printf("i2c ret = %d\n", ret);
+#endif
 
 #ifdef CONFIG_SAMV7_MCAN
   /* Initialize CAN and register the CAN driver. */
@@ -187,15 +133,13 @@ int sam_bringup(void)
     }
 #endif
 
-#ifdef HAVE_QENC_FEEDBACK
+#if defined(HAVE_IRCA_FEEDBACK) || defined(HAVE_IRCB_FEEDBACK)
   /* Configure quadrature encoder feedbacks */
-  {
-    int ret = sam_qencs_initialize();
-    //if (ret < 0)
-    //  {
-    //    printf("QENC init returned %d\n", ret);
-    //  }
-  }
+  ret = sam_qencs_initialize();
+  if (ret < 0)
+    {
+      printf("QENC init returned %d\n", ret);
+    }
 #endif
 
 #ifdef HAVE_MACADDR
