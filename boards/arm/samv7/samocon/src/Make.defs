@@ -56,6 +56,12 @@ ifeq ($(CONFIG_SENSORS_QENCODER),y)
 CSRCS += sam_qencs.c
 endif
 
+ifeq ($(CONFIG_SAMV7_TWIHS0),y)
+CSRCS += sam_i2c.c
+else ifeq ($(CONFIG_SAMV7_TWIHS1),y)
+CSRCS += sam_i2c.c
+endif
+
 .PHONY = context distclean
 
 $(SCRIPTOUT): $(LDSCRIPT_TEMPLATE) $(CONFIGFILE)
