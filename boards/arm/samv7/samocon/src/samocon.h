@@ -33,6 +33,8 @@
 #include <arch/irq.h>
 #include <nuttx/irq.h>
 
+#include "sam_gpio.h"
+
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
@@ -174,7 +176,7 @@
 /* SPI define logic */
 #define HAVE_W25QXXXJV       1
 #define HAVE_MAIN_SPI0       1
-#define HAVE_EXTERNAL_SPI1   1
+//#define HAVE_EXTERNAL_SPI1   1
 #undef HAVE_EXTERNAL_3ADC
 
 #ifdef CONFIG_SAMV7_QSPI
@@ -205,6 +207,28 @@
     !defined(CONFIG_SAMV7_EMAC0))
 #  warning "Configure GPIOC_IRQ, CONFIG_NET and CONFIG_SAMV7_EMAC0 to use eth!"
 #  undef HAVE_NETWORK
+#endif
+
+
+/* AD converters define logic */
+#define HAVE_AFEC0           1
+#define HAVE_AFEC1           1
+#undef HAVE_EXTERNAL_3ADC    
+
+#if defined(HAVE_AFEC0) && !defined(CONFIG_SAMV7_AFEC0)
+#   warning "Configure CONFIG_SAMV7_AFEC0 for AFEC0!"
+#   undef HAVE_AFEC0
+#endif
+
+#if defined(HAVE_AFEC1) && !defined(CONFIG_SAMV7_AFEC1)
+#   warning "Configure CONFIG_SAMV7_AFEC1 for AFEC1!"
+#   undef HAVE_AFEC1
+#endif
+
+#if defined(HAVE_EXTERNAL_3ADC) && !defined(CONFIG_SAMV7_AFEC1) && \
+    !defined(HAVE_AFEC1) 
+#   warning "Configure CONFIG_SAMV7_AFEC1 for 3 external AD channels!"
+#   undef HAVE_AFEC1
 #endif
 
 
@@ -309,7 +333,7 @@
                              GPIO_PIN6)
 #define IRQ_USB_HOST_OVERCURR SAM_IRQ_PD29
 
-/* PWMs */
+
 
 /* Quadrature Encoder Counters */
 /*
@@ -552,6 +576,9 @@ int sam_qencs_initialize(void);
 int sam_i2c_init(void);
 #endif
 
+#if defined(HAVE_AFEC0) || defined(HAVE_AFEC1)
+int sam_adc_init(void);
+#endif
 
 #endif /* __ASSEMBLY__ */
 #endif /* __BOARDS_ARM_SAMV7_SAMV71_XULT_SRC_SAMV71_XULT_H */
