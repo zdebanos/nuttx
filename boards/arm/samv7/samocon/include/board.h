@@ -341,6 +341,58 @@
  #define GPIO_MCAN1_RX GPIO_MCAN1_RX_2
  #define GPIO_MCAN1_TX GPIO_MCAN1_TX_2
 
+/* PWMs */
+/*
+ * PWM0 and PWM1 peripherals are used. H and L complementary channels
+ * are routed, expect for PWM1_CH2, where only L channel is routed.
+ * It should be possible to make the L channel behave the same as the
+ * H channel. When using the default IFX007 power stage board, only H
+ * channels are used and the L channels are configured as GPIOs.
+ * Fault inputs are used too.
+ *
+ *   --------- --------- ------
+ *   SaMoCon   SAMV71    SAMV71       
+ *   Pin       Function  Pin
+ *   --------- --------- ------  
+ *   PWM0_H0   PWMC1_H0  PA12
+ *   PWM0_H1   PWMC1_H1  PA14
+ *   PWM0_H2   GPIO      PA15
+ *   PWM0_H3   PWMC1_H3  PA8
+ *   PWM0_L0   PWMC1_L0  PA11
+ *   PWM0_L1   PWMC1_L1  PA13
+ *   PWM0_L2   PWMC1_L2  PA23
+ *   PWM0_L3   PWMC1_L3  PA5
+ *   PWM0_F    PWMC1_F0  PA21
+ *   PWM1_H0   PWMC0_H0  PD11
+ *   PWM1_H1   PWMC0_H1  PA24
+ *   PWM1_H2   PWMC0_H2  PC19
+ *   PWM1_H3   PWMC0_H3  PD23
+ *   PWM1_L0   PWMC0_L0  PD24
+ *   PWM1_L1   PWMC0_L1  PC1
+ *   PWM1_L2   PWMC0_L2  PC20
+ *   PWM1_L3   PWMC0_L3  PC22
+ *   PWM1_F    PWMC0_F0  PA9
+ */
+
+ #define GPIO_PWMC0_H0 GPIO_PWMC0_H0_6
+ #define GPIO_PWMC0_H1 GPIO_PWMC0_H1_5
+ #define GPIO_PWMC0_H2 GPIO_PWMC0_H2_5
+ #define GPIO_PWMC0_H3 GPIO_PWMC0_H3_1
+ #define GPIO_PWMC0_L0 GPIO_PWMC0_L0_2
+ #define GPIO_PWMC0_L1 GPIO_PWMC0_L1_4
+ #define GPIO_PWMC0_L2 GPIO_PWMC0_L2_5
+ #define GPIO_PWMC0_L3 GPIO_PWMC0_L3_3
+
+ #define GPIO_PWMC1_H0 GPIO_PWMC1_H0_2
+ #define GPIO_PWMC1_H1 GPIO_PWMC1_H1_2
+ #define GPIO_PWMC1_H2 \
+         (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOA | GPIO_PIN15)
+ #define GPIO_PWMC1_H3 GPIO_PWMC1_H3_1
+ #define GPIO_PWMC1_L0 GPIO_PWMC1_L0_2
+ #define GPIO_PWMC1_L1 GPIO_PWMC1_L1_2
+ #define GPIO_PWMC1_L2 GPIO_PWMC1_L2_2
+ #define GPIO_PWMC1_L3 GPIO_PWMC1_L3_1
+
 
 /****************************************************************************
  * Public Types
