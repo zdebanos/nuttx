@@ -143,7 +143,7 @@ endif()
 
 target_sources(arch PRIVATE ${SRCS})
 set_property(GLOBAL PROPERTY LD_SCRIPT
-  /home/zdebanos/documents/work/nuttx/nuttx/boards/arm/samv7/common/scripts/flash.ld.template)
+  "${NUTTX_BOARD_DIR}/../common/scripts/flash.ld.template")
 
 set_property(GLOBAL PROPERTY LD_SCRIPT_USER
-  /home/zdebanos/documents/work/nuttx/nuttx/boards/arm/samv7/common/scripts/user-space.ld)
+  "${NUTTX_BOARD_DIR}/../common/scripts/user-space.ld")
