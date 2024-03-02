@@ -62,6 +62,12 @@ else ifeq ($(CONFIG_SAMV7_TWIHS1),y)
 CSRCS += sam_i2c.c
 endif
 
+ifeq ($(CONFIG_SAMV7_AFEC0),y)
+CSRCS += sam_adc.c
+else ifeq ($(CONFIG_SAMV7_AFEC1),y)
+CSRCS += sam_adc.c
+endif
+
 .PHONY = context distclean
 
 $(SCRIPTOUT): $(LDSCRIPT_TEMPLATE) $(CONFIGFILE)
