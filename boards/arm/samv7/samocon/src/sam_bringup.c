@@ -241,6 +241,10 @@ int sam_bringup(void)
   sam_adc_init();
 #endif
 
+#if defined(HAVE_PWM0) || defined(HAVE_PWM1)
+  sam_pwm_init();
+#endif
+
   UNUSED(ret);
   return OK;
 }
