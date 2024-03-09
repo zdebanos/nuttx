@@ -237,6 +237,10 @@ int sam_bringup(void)
    * capabilities.
    */
 
+#if defined(HAVE_AFEC0) || defined(HAVE_AFEC1)
+  sam_adc_init();
+#endif
+
   UNUSED(ret);
   return OK;
 }
