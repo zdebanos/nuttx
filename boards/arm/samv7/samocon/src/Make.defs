@@ -68,6 +68,12 @@ else ifeq ($(CONFIG_SAMV7_AFEC1),y)
 CSRCS += sam_adc.c
 endif
 
+ifeq ($(CONFIG_SAMV7_PWM0),y)
+CSRCS += sam_pwm.c
+else ifeq ($(CONFIG_SAMV7_PWM1),y)
+CSRCS += sam_pwm.c
+endif
+
 .PHONY = context distclean
 
 $(SCRIPTOUT): $(LDSCRIPT_TEMPLATE) $(CONFIGFILE)
