@@ -374,24 +374,116 @@
  *   PWM1_F    PWMC0_F0  PA9
  */
 
- #define GPIO_PWMC0_H0 GPIO_PWMC0_H0_6
- #define GPIO_PWMC0_H1 GPIO_PWMC0_H1_5
- #define GPIO_PWMC0_H2 GPIO_PWMC0_H2_5
- #define GPIO_PWMC0_H3 GPIO_PWMC0_H3_1
- #define GPIO_PWMC0_L0 GPIO_PWMC0_L0_2
- #define GPIO_PWMC0_L1 GPIO_PWMC0_L1_4
- #define GPIO_PWMC0_L2 GPIO_PWMC0_L2_5
- #define GPIO_PWMC0_L3 GPIO_PWMC0_L3_3
+#define GPIO_PWMC0_H0 GPIO_PWMC0_H0_6
+#define GPIO_PWMC0_H1 GPIO_PWMC0_H1_5
+#define GPIO_PWMC0_H2 GPIO_PWMC0_H2_5
+#define GPIO_PWMC0_H3 GPIO_PWMC0_H3_1
 
- #define GPIO_PWMC1_H0 GPIO_PWMC1_H0_2
- #define GPIO_PWMC1_H1 GPIO_PWMC1_H1_2
- #define GPIO_PWMC1_H2 \
-         (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOA | GPIO_PIN15)
- #define GPIO_PWMC1_H3 GPIO_PWMC1_H3_1
- #define GPIO_PWMC1_L0 GPIO_PWMC1_L0_2
- #define GPIO_PWMC1_L1 GPIO_PWMC1_L1_2
- #define GPIO_PWMC1_L2 GPIO_PWMC1_L2_2
- #define GPIO_PWMC1_L3 GPIO_PWMC1_L3_1
+#ifdef CONFIG_SAMV7_PWM0_CH0_COMP
+#define GPIO_PWMC0_L0 GPIO_PWMC0_L0_2
+#else
+#define GPIO_PWMC0_L0 \
+        (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOD | GPIO_PIN24)
+#endif
+
+#ifdef CONFIG_SAMV7_PWM0_CH1_COMP
+#define GPIO_PWMC0_L1 GPIO_PWMC0_L1_4
+#else
+#define GPIO_PWMC0_L1 \
+        (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOC | GPIO_PIN1)
+#endif
+
+#ifdef CONFIG_SAMV7_PWM0_CH2_COMP
+#define GPIO_PWMC0_L2 GPIO_PWMC0_L2_5
+#else
+#define GPIO_PWMC0_L2 \
+        (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOC | GPIO_PIN20)
+#endif
+
+#ifdef CONFIG_SAMV7_PWM0_CH3_COMP
+#define GPIO_PWMC0_L3 GPIO_PWMC0_L3_3
+#else
+#define GPIO_PWMC0_L3 \
+        (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOC | GPIO_PIN22)
+#endif
+
+#define GPIO_PWMC1_H0 GPIO_PWMC1_H0_2
+#define GPIO_PWMC1_H1 GPIO_PWMC1_H1_2
+#define GPIO_PWMC1_H2 \
+        (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOA | GPIO_PIN15)
+#define GPIO_PWMC1_H3 GPIO_PWMC1_H3_1
+
+#ifdef CONFIG_SAMV7_PWM1_CH0_COMP
+#define GPIO_PWMC1_L0 GPIO_PWMC1_L0_2
+#else
+#define GPIO_PWMC1_L0 \
+        (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOA | GPIO_PIN11)
+#endif
+
+#ifdef CONFIG_SAMV7_PWM1_CH1_COMP
+#define GPIO_PWMC1_L1 GPIO_PWMC1_L1_2
+#else
+#define GPIO_PWMC1_L1 \
+        (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOA | GPIO_PIN13)
+#endif
+
+#ifdef CONFIG_SAMV7_PWM1_CH2_COMP
+#define GPIO_PWMC1_L2 GPIO_PWMC1_L2_2
+#else
+#define GPIO_PWMC1_L2 \
+        (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOA | GPIO_PIN23)
+#endif
+
+#ifdef CONFIG_SAMV7_PWM1_CH3_COMP
+#define GPIO_PWMC1_L3 
+#else
+#define GPIO_PWMC1_L3 \
+        (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOA | GPIO_PIN5)
+#endif
+
+
+
+/* GPIO Hall Sensors Inputs
+ *
+ * The SaMoCon board includes two inputs for two Hall sensors trios -
+ * HALL0 and HALL1.
+ * The outputs of the Hall sensors can be used in motor feedback control
+ * as the position of the motor's shaft. GPIO inputs are used for this.
+ *
+ *   --------- ------  
+ *   SaMoCon   SAMV71             
+ *   Pin       Pin    
+ *   --------- ------  
+ *   HALL0_IN0 PC17   
+ *   HALL0_IN1 PC11   
+ *   HALL0_IN2 PC10   
+ *   HALL1_IN0 PD13         
+ *   HALL1_IN1 PD14           
+ *   HALL1_IN2 PD17   
+ */
+
+
+#define HALL0_PORT_TYPE GPIO_PORT_PIOC
+#define HALL1_PORT_TYPE GPIO_PORT_PIOD
+
+#define GPIO_HALL0_IN0 (GPIO_INPUT | GPIO_PORT_PIOC | GPIO_PIN17)
+#define GPIO_HALL0_IN1 (GPIO_INPUT | GPIO_PORT_PIOC | GPIO_PIN11)
+#define GPIO_HALL0_IN2 (GPIO_INPUT | GPIO_PORT_PIOC | GPIO_PIN10)
+#define GPIO_HALL1_IN0 (GPIO_INPUT | GPIO_PORT_PIOD | GPIO_PIN13) 
+#define GPIO_HALL1_IN1 (GPIO_INPUT | GPIO_PORT_PIOD | GPIO_PIN14) 
+#define GPIO_HALL1_IN2 (GPIO_INPUT | GPIO_PORT_PIOD | GPIO_PIN17) 
+
+/* Quadrature Encoder Counters */
+
+#define GPIO_IRCA_MARK (GPIO_INPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOA | \
+                        GPIO_PIN10)
+#define GPIO_IRCB_MARK (GPIO_INPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOC | \
+                        GPIO_PIN16)
+
+
+
+
+
 
 
 /****************************************************************************
