@@ -231,6 +231,11 @@
 #   undef HAVE_AFEC1
 #endif
 
+/* PWM define logic */
+#define HAVE_PWM0
+#define HAVE_PWM1
+#define HAVE_COMPLEMENTARY_PWM0
+#define HAVE_COMPLEMENTARY_PWM1
 
 /* procfs File System */
 
@@ -362,38 +367,7 @@
 #define IRCA_DEVPATH "/dev/qe0"
 #define IRCB_TC      0
 #define IRCB_DEVPATH "/dev/qe1"
-#define GPIO_IRCA_MARK (GPIO_INPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOA | GPIO_PIN10)
-#define GPIO_IRCB_MARK (GPIO_INPUT | GPIO_CFG_DEFAULT | GPIO_PORT_PIOC | GPIO_PIN16)
 
-/* GPIO Hall Sensors Inputs
- *
- * The SaMoCon board includes two inputs for two Hall sensors trios -
- * HALL0 and HALL1.
- * The outputs of the Hall sensors can be used in motor feedback control
- * as the position of the motor's shaft. GPIO inputs are used for this.
- *
- *   --------- ------  
- *   SaMoCon   SAMV71             
- *   Pin       Pin    
- *   --------- ------  
- *   HALL0_IN0 PC17   
- *   HALL0_IN1 PC11   
- *   HALL0_IN2 PC10   
- *   HALL1_IN0 PD13         
- *   HALL1_IN1 PD14           
- *   HALL1_IN2 PD17   
- */
-
-
-#define HALL0_PORT_TYPE GPIO_PORT_PIOC
-#define HALL1_PORT_TYPE GPIO_PORT_PIOD
-
-#define GPIO_HALL0_IN0 (GPIO_INPUT | GPIO_PORT_PIOC | GPIO_PIN17)
-#define GPIO_HALL0_IN1 (GPIO_INPUT | GPIO_PORT_PIOC | GPIO_PIN11)
-#define GPIO_HALL0_IN2 (GPIO_INPUT | GPIO_PORT_PIOC | GPIO_PIN10)
-#define GPIO_HALL1_IN0 (GPIO_INPUT | GPIO_PORT_PIOD | GPIO_PIN13) 
-#define GPIO_HALL1_IN1 (GPIO_INPUT | GPIO_PORT_PIOD | GPIO_PIN14) 
-#define GPIO_HALL1_IN2 (GPIO_INPUT | GPIO_PORT_PIOD | GPIO_PIN17) 
 
 /* SPI Peripherals
  * 
@@ -578,6 +552,10 @@ int sam_i2c_init(void);
 
 #if defined(HAVE_AFEC0) || defined(HAVE_AFEC1)
 int sam_adc_init(void);
+#endif
+
+#if defined(HAVE_PWM0) || defined(HAVE_PWM1)
+int sam_pwm_init(void);
 #endif
 
 #endif /* __ASSEMBLY__ */
