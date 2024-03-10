@@ -245,6 +245,10 @@ int sam_bringup(void)
   sam_pwm_init();
 #endif
 
+#if defined(HAVE_HALLA) || defined(HAVE_HALLB)
+  sam_halls_init();
+#endif
+
   UNUSED(ret);
   return OK;
 }
