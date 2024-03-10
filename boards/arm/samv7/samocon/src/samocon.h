@@ -416,6 +416,10 @@
                              GPIO_PIN27)
 #define W25QXXXJV_SPI_CSMEM (GPIO_OUTPUT | GPIO_PORT_PIOC | GPIO_PIN28) 
 
+/* HALL inputs */
+#define HAVE_HALLA  1
+#define HAVE_HALLB  1
+
 /* External Outputs. 
  * See the SaMoCon's wiki for external pinout.
  * TODO
@@ -543,7 +547,7 @@ int sam_emac0_setmac(void);
 #endif
 
 #if defined(HAVE_IRCA_FEEDBACK) || defined(HAVE_IRCB_FEEDBACK)
-int sam_qencs_initialize(void);
+int sam_qencs_init(void);
 #endif
 
 #if defined(HAVE_MAIN_I2C) || defined(HAVE_EXTERNAL_I2C)
@@ -556,6 +560,10 @@ int sam_adc_init(void);
 
 #if defined(HAVE_PWM0) || defined(HAVE_PWM1)
 int sam_pwm_init(void);
+#endif
+
+#if defined(HAVE_HALLA) || defined(HAVE_HALLB)
+int sam_halls_init(void);
 #endif
 
 #endif /* __ASSEMBLY__ */
