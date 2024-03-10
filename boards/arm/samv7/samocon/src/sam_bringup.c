@@ -135,7 +135,7 @@ int sam_bringup(void)
 
 #if defined(HAVE_IRCA_FEEDBACK) || defined(HAVE_IRCB_FEEDBACK)
   /* Configure quadrature encoder feedbacks */
-  ret = sam_qencs_initialize();
+  ret = sam_qencs_init();
   if (ret < 0)
     {
       printf("QENC init returned %d\n", ret);
