@@ -18,7 +18,7 @@
 #
 # ##############################################################################
 
-set(SRCS sam_boot.c)
+set(SRCS sam_boot.c sam_halls.c)
 
 if(CONFIG_BOARDCTL)
   list(APPEND SRCS sam_appinit.c sam_bringup.c)
