@@ -15,7 +15,7 @@
 #ifdef CONFIG_SENSORS_QENCODER
 
 #if defined(HAVE_IRCA_FEEDBACK) || defined(HAVE_IRCB_FEEDBACK)
-int sam_qencs_initialize(void)
+int sam_qencs_init(void)
 {
     int ret;
 #ifdef HAVE_IRCA_FEEDBACK
