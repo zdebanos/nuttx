@@ -70,22 +70,6 @@ int sam_pwm_init(void)
       pwmerr("ERROR: PWM0 register failed!\n");
       return ret;
     }
-#ifndef CONFIG_SAMV7_PWM0_CH0_COMP
-  sam_configgpio(GPIO_PWMC0_L0);
-  sam_gpiowrite(GPIO_PWMC0_L0, false);
-#endif
-#ifndef CONFIG_SAMV7_PWM0_CH1_COMP
-  sam_configgpio(GPIO_PWMC0_L1);
-  sam_gpiowrite(GPIO_PWMC0_L1, false);
-#endif
-#ifndef CONFIG_SAMV7_PWM0_CH2_COMP
-  sam_configgpio(GPIO_PWMC0_L2);
-  sam_gpiowrite(GPIO_PWMC0_L2, false);
-#endif
-#ifndef CONFIG_SAMV7_PWM0_CH3_COMP
-  sam_configgpio(GPIO_PWMC0_L3);
-  sam_gpiowrite(GPIO_PWMC0_L3, false);
-#endif
 #endif /* HAVE_PWM0 */
 
 #ifdef HAVE_PWM1
@@ -101,22 +85,6 @@ int sam_pwm_init(void)
       pwmerr("ERROR: PWM1 register failed!\n");
       return ret;
     }
-#ifndef CONFIG_SAMV7_PWM1_CH0_COMP
-  sam_configgpio(GPIO_PWMC1_L0);
-  sam_gpiowrite(GPIO_PWMC1_L0, false);
-#endif
-#ifndef CONFIG_SAMV7_PWM1_CH1_COMP
-  sam_configgpio(GPIO_PWMC1_L1);
-  sam_gpiowrite(GPIO_PWMC1_L1, false);
-#endif
-#ifndef CONFIG_SAMV7_PWM1_CH2_COMP
-  sam_configgpio(GPIO_PWMC1_L2);
-  sam_gpiowrite(GPIO_PWMC1_L2, false);
-#endif
-#ifndef CONFIG_SAMV7_PWM1_CH3_COMP
-  sam_configgpio(GPIO_PWMC1_L3);
-  sam_gpiowrite(GPIO_PWMC1_L3, false);
-#endif
 #endif /* HAVE_PWM1 */
   return 0;
 }
