@@ -25,7 +25,6 @@ int sam_qencs_init(void)
         printf("Failed to register %s\n", IRCA_DEVPATH);
         return ret;
       }
-    sam_configgpio(GPIO_IRCA_MARK);
 #endif
 #ifdef HAVE_IRCB_FEEDBACK
     ret = sam_qeinitialize(IRCB_DEVPATH, IRCB_TC);
@@ -34,7 +33,6 @@ int sam_qencs_init(void)
         printf("Failed to register %s\n", IRCB_DEVPATH);
         return ret;
       }
-    sam_configgpio(GPIO_IRCB_MARK);
 #endif
     return OK;
 }
