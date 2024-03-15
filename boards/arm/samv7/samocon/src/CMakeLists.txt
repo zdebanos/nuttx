@@ -18,7 +18,7 @@
 #
 # ##############################################################################
 
-set(SRCS sam_boot.c sam_halls.c)
+set(SRCS sam_boot.c)
 
 if(CONFIG_BOARDCTL)
   list(APPEND SRCS sam_appinit.c sam_bringup.c)
@@ -64,6 +64,10 @@ endif()
 
 if(CONFIG_SAMV7_PWM0 OR CONFIG_SAMV7_PWM1)
   list(APPEND SRCS sam_pwm.c)
+endif()
+
+if(CONFIG_DEV_GPIO)
+  list(APPEND SRCS sam_gpio.c)
 endif()
 
 
