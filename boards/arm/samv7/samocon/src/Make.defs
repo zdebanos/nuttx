@@ -20,7 +20,7 @@
 
 include $(TOPDIR)/Make.defs
 
-CSRCS = sam_boot.c sam_halls.c
+CSRCS = sam_boot.c
 
 ifeq ($(CONFIG_BOARDCTL),y)
 CSRCS += sam_appinit.c sam_bringup.c
@@ -72,6 +72,10 @@ ifeq ($(CONFIG_SAMV7_PWM0),y)
 CSRCS += sam_pwm.c
 else ifeq ($(CONFIG_SAMV7_PWM1),y)
 CSRCS += sam_pwm.c
+endif
+
+ifeq ($(CONFIG_DEV_GPIO),y)
+CSRCS += sam_gpio.c
 endif
 
 .PHONY = context distclean
