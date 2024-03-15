@@ -85,6 +85,7 @@
 #  define CONFIG_NSH_MMCSDSLOTNO 0
 #endif
 
+
 #define HSMCI0_SLOTNO CONFIG_NSH_MMCSDSLOTNO
 #define HSMCI0_MINOR  CONFIG_NSH_MMCSDMINOR
 
@@ -562,8 +563,8 @@ int sam_adc_init(void);
 int sam_pwm_init(void);
 #endif
 
-#if defined(HAVE_HALLA) || defined(HAVE_HALLB)
-int sam_halls_init(void);
+#ifdef CONFIG_DEV_GPIO
+int sam_gpio_init(void);
 #endif
 
 #endif /* __ASSEMBLY__ */
