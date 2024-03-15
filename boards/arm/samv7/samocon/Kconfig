@@ -5,11 +5,36 @@
 
 if ARCH_BOARD_SAMOCON
 
-config SAMOCON_KCONFIG_TEST
-	bool "Zkouska Zkouska"
+config SAMOCON_ROMFS_MOUNT
+	bool "ROMFS boot mount"
 	default n
+	depends on FS_ROMFS
 	---help---
-		"Nic nedelam :)"
+		By selecting this option, you an build mount a ROMFS file system as
+		part of the system boot operation.  NOTE that the board logic
+		contains no a priori ROMFS file system.  In order to use this option,
+		you must provide the file nuttx/boards/samocon/include/boot_romfsimg.h.
+		You might use logic in the tool at apps/tools/mkromfsimg.sh to create
+		this header file.
 
+if SAMOCON_ROMFS_MOUNT
+
+config SAMOCON_ROMFS_ROMDISK_MINOR
+	int "ROM disk minor device number"
+	default 0
+
+config SAMOCON_ROMFS_ROMDISK_DEVNAME
+	string "ROM disk block device"
+	default "/dev/ram0"
+
+config SAMOCON_ROMFS_ROMDISK_SECTSIZE
+	int "ROM disk sector size"
+	default 512
+
+config SAMOCON_ROMFS_MOUNT_MOUNTPOINT
+	string "ROMFS mount point"
+	default "/bin"
+
+endif # SAMOCON_ROMFS_MOUNT
 
 endif # ARCH_BOARD_SAMOCON
