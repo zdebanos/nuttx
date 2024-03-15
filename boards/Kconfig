@@ -2564,6 +2564,12 @@ config ARCH_BOARD_SAMV71_XULT
 	select ARCH_PHY_INTERRUPT
 	---help---
 		The port of NuttX to the Atmel SAMV71 Xplained Ultra evaluation board.
+	
+config ARCH_BOARD_SAMOCON
+	bool "SaMoCon - open hardware motion controller"
+	depends on ARCH_CHIP_SAMV71Q21
+	---help---
+		Select samocon board
 
 config ARCH_BOARD_SHENZHOU
 	bool "Shenzhou STM32F107 board"
@@ -3667,6 +3673,7 @@ config ARCH_BOARD
 	default "same70-qmtech"             if ARCH_BOARD_SAME70_QMTECH
 	default "same70-xplained"           if ARCH_BOARD_SAME70_XPLAINED
 	default "samv71-xult"               if ARCH_BOARD_SAMV71_XULT
+	default "samocon"                   if ARCH_BOARD_SAMOCON
 	default "shenzhou"                  if ARCH_BOARD_SHENZHOU
 	default "skp16c26"                  if ARCH_BOARD_SKP16C26
 	default "photon"                    if ARCH_BOARD_PHOTON
@@ -4188,6 +4195,9 @@ source "boards/arm/samv7/same70-xplained/Kconfig"
 endif
 if ARCH_BOARD_SAMV71_XULT
 source "boards/arm/samv7/samv71-xult/Kconfig"
+endif
+if ARCH_BOARD_SAMOCON
+source "boards/arm/samv7/samocon/Kconfig"
 endif
 if ARCH_BOARD_B_G474E_DPOW1
 source "boards/arm/stm32/b-g474e-dpow1/Kconfig"
