@@ -34,6 +34,8 @@
 #include <debug.h>
 #include <nuttx/signal.h>
 
+#define HAVE_ROMFS
+
 #ifdef CONFIG_USBMONITOR
 #  include <nuttx/usb/usbmonitor.h>
 #endif
@@ -47,6 +49,15 @@
 
 #include "sam_twihs.h"
 #include "samocon.h"
+
+#if defined(HAVE_ROMFS) && !defined(CONFIG_FS_ROMFS)
+#  undef HAVE_ROMFS
+#  warning "Can't have ROMFS, CONFIG_ROMFS must be defined!"
+#endif
+
+#ifdef HAVE_ROMFS
+//#  include <arch/board/boot_romfsimg.h>
+#endif
 
 
 #ifdef HAVE_HSMCI
@@ -62,8 +73,8 @@
  ****************************************************************************/
 
 #define NSECTORS(n) \
-  (((n)+CONFIG_SAMV71XULT_ROMFS_ROMDISK_SECTSIZE-1) / \
-   CONFIG_SAMV71XULT_ROMFS_ROMDISK_SECTSIZE)
+  (((n)+CONFIG_SAMOCON_ROMFS_ROMDISK_SECTSIZE-1) / \
+   CONFIG_SAMOCON_ROMFS_ROMDISK_SECTSIZE)
 
 /****************************************************************************
  * Private Data
