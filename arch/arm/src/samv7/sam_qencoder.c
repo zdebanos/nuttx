@@ -38,6 +38,7 @@
 
 #include "chip.h"
 #include "arm_internal.h"
+#include "hardware/sam_tc.h"
 #include "sam_tc.h"
 #include "sam_qencoder.h"
 
@@ -67,6 +68,13 @@ struct sam_lowerhalf_s
   TC_HANDLE        tch;          /* Handle returned by sam_tc_initialize() */
 
   bool             inuse;        /* True: The lower-half driver is in-use */
+
+#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+  /* qe_index_s IOCTL support */
+  uint32_t last_pos;
+  uint32_t last_index;
+  uint32_t index_cnt;
+#endif
 };
 
 /****************************************************************************
@@ -85,6 +93,9 @@ static int sam_position(struct qe_lowerhalf_s *lower, int32_t *pos);
 static int sam_reset(struct qe_lowerhalf_s *lower);
 static int sam_ioctl(struct qe_lowerhalf_s *lower, int cmd,
                      unsigned long arg);
+#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+static int sam_qeindex(struct qe_lowerhalf_s *lower, struct qe_index_s *dest);
+#endif
 
 /****************************************************************************
  * Private Data
@@ -111,6 +122,11 @@ static struct sam_lowerhalf_s g_tc0lower =
   .ops      = &g_qecallbacks,
   .tcid     = 0,
   .inuse    = false,
+#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+  .last_pos = 0,
+  .last_index = 0,
+  .index_cnt = 0
+#endif
 };
 #endif
 
@@ -120,6 +136,11 @@ static struct sam_lowerhalf_s g_tc1lower =
   .ops      = &g_qecallbacks,
   .tcid     = 1,
   .inuse    = false,
+#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+  .last_pos = 0,
+  .last_index = 0,
+  .index_cnt = 0
+#endif
 };
 #endif
 
@@ -129,6 +150,11 @@ static struct sam_lowerhalf_s g_tc2lower =
   .ops      = &g_qecallbacks,
   .tcid     = 2,
   .inuse    = false,
+#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+  .last_pos = 0,
+  .last_index = 0,
+  .index_cnt = 0
+#endif
 };
 #endif
 
@@ -138,6 +164,11 @@ static struct sam_lowerhalf_s g_tc3lower =
   .ops      = &g_qecallbacks,
   .tcid     = 3,
   .inuse    = false,
+#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+  .last_pos = 0,
+  .last_index = 0,
+  .index_cnt = 0
+#endif
 };
 #endif
 
@@ -218,6 +249,19 @@ static int sam_shutdown(struct qe_lowerhalf_s *lower)
   return OK;
 }
 
+#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+static int32_t sam_qe_pos_16to32b(struct qe_lowerhalf_s *lower, uint32_t current_pos)
+{
+  struct sam_lowerhalf_s *priv = (struct sam_lowerhalf_s*) lower;
+
+  uint32_t new_pos = *(volatile uint32_t*) &priv->last_pos;
+  new_pos += (int16_t) (current_pos - new_pos);
+  *(volatile uint32_t*) &priv->last_pos = new_pos;
+
+  return (int32_t) new_pos;
+}
+#endif
+
 /****************************************************************************
  * Name: sam_position
  *
@@ -229,10 +273,15 @@ static int sam_shutdown(struct qe_lowerhalf_s *lower)
 static int sam_position(struct qe_lowerhalf_s *lower, int32_t *pos)
 {
   struct sam_lowerhalf_s *priv = (struct sam_lowerhalf_s *)lower;
+  uint32_t new_pos;
+  new_pos = sam_tc_getcounter(priv->tch);
 
   /* Return the counter value */
-
-  *pos = (int32_t)sam_tc_getcounter(priv->tch);
+#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+  *pos = sam_qe_pos_16to32b(lower, new_pos);
+#else
+  *pos = (int32_t) new_pos;
+#endif
 
   return OK;
 }
@@ -270,10 +319,69 @@ static int sam_reset(struct qe_lowerhalf_s *lower)
 static int sam_ioctl(struct qe_lowerhalf_s *lower, int cmd,
                      unsigned long arg)
 {
-  /* No ioctl commands supported */
-
+#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+  switch (cmd)
+    {
+      case QEIOC_GETINDEX:
+        {
+          /* Call the qeindex function */
+          sam_qeindex(lower, (struct qe_index_s*) arg);
+          return OK;
+        }
+      default:
+        {
+          return -ENOTTY;
+        }
+    }
+#else
   return -ENOTTY;
+#endif
 }
+
+
+#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+static int sam_qeindex(struct qe_lowerhalf_s *lower, struct qe_index_s *dest)
+{
+  struct sam_lowerhalf_s *priv = (struct sam_lowerhalf_s*) lower;
+
+  /* Get the current position into a local variable */
+  int32_t current_pos;
+  sam_position(lower, &current_pos);
+  /* Perform the 32bit extension of the timer */
+  dest->qenc_pos = current_pos;
+
+  /* Perform the capture logic */
+  TC_HANDLE handle = priv->tch;
+  uint32_t status = sam_tc_getpending(handle);
+  uint32_t current_indx_pos;
+  bool captured = false;
+
+  /* Check if something has been captured */
+  if (status & 0x20)
+    {
+      /* The new index pos is in the Capture A register */
+      current_indx_pos = sam_tc_getregister(handle, TC_REGA);
+      captured = true;
+    }
+  else if (status & 0x40)
+    {
+      /* The new index pos is in the Capture B register */
+      current_indx_pos = sam_tc_getregister(handle, TC_REGB);
+      captured = true;
+    }
+
+  if (captured)
+    {
+      priv->index_cnt++;
+      uint32_t new_index = *(volatile uint32_t*) &priv->last_pos;
+      new_index += (int16_t) (current_indx_pos - new_index);
+      *(volatile uint32_t*) &priv->last_index = new_index;
+    }
+  dest->indx_pos = priv->last_index;
+  dest->indx_cnt = priv->index_cnt;
+  return OK;
+}
+#endif
 
 /****************************************************************************
  * Public Functions
@@ -323,10 +431,28 @@ int sam_qeinitialize(const char *devpath, int tc)
 
   /* Allocate the timer/counter and select its mode of operation */
 
+  /* When configuring the timer with no index reset, do not obey
+   * the datasheet's QDEC instructions. Do not set the TC_CMR_ABETRG and
+   * TC_CMR_ETRGEDG_RISING bits responsible for the counter reset.
+   *
+   * Due to the internal structure of the Timer/Counter, both Capture
+   * registers (A and B) must be used, because of the exclusive access
+   * to both Capture registers (refer to section 49-6 in the latest 2023
+   * ATSAMV7's datasheet). Only one register could be used when using triggers
+   * which we can't use.  
+   */
+#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+  mode = TC_CMR_TCCLKS_XC0 |
+         TC_CMR_CAPTURE |
+         TC_CMR_LDRA_RISING |
+         TC_CMR_LDRB_RISING |
+         TC_CMR_SBSMPLR_ONE;
+#else
   mode = TC_CMR_TCCLKS_XC0 |     /* Use XC0 as an external TCCLKS value */
          TC_CMR_ETRGEDG_RISING | /* Select 'Rising edge' as the External Trigger Edge */
          TC_CMR_ABETRG |         /* Select 'TIOAx' as the External Trigger */
          TC_CMR_CAPTURE;         /* Select 'Capture mode' */
+#endif
 
   priv->tch = sam_tc_allocate(tc * SAM_TC_NCHANNELS, mode);
   if (priv->tch == NULL)
@@ -349,6 +475,7 @@ int sam_qeinitialize(const char *devpath, int tc)
 #endif
 
   sam_tc_setblockmode(priv->tch, mode);
+
 
   /* Register the upper-half driver */
 
