@@ -711,6 +711,7 @@ config SAMV7_PWM0_CH3_COMP
 	bool "Use complementary output"
 	default n
 
+
 endif
 
 menu "PWM Comparison units"
@@ -3750,8 +3751,8 @@ menu "QEncoder Driver"
 	depends on SENSORS_QENCODER
 	depends on SAMV7_HAVE_TC
 
-config SAMV7_QE_NO_INDEX_RESET
-	bool "Index signal does not reset the counter"
+config SAMV7_QENCODER_ENABLE_GETINDEX
+	bool "Support ioctl GETINDEX call"
 	default n
 	---help---
 		Index signal does not reset the internal counter.
@@ -3760,7 +3761,8 @@ config SAMV7_QE_NO_INDEX_RESET
 		resetting it.
 
 		This provides support for the GETINDEX ioctl call
-		with the qe_index_s struct.
+		with the qe_index_s struct. The 16 to 32 bit extension
+		of the driver's counter is also done.
 
 config SAMV7_TC0_QE
 	bool "TC0"

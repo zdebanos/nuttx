@@ -69,7 +69,7 @@ struct sam_lowerhalf_s
 
   bool             inuse;        /* True: The lower-half driver is in-use */
 
-#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
   /* qe_index_s IOCTL support */
   uint32_t last_pos;
   uint32_t last_index;
@@ -93,7 +93,7 @@ static int sam_position(struct qe_lowerhalf_s *lower, int32_t *pos);
 static int sam_reset(struct qe_lowerhalf_s *lower);
 static int sam_ioctl(struct qe_lowerhalf_s *lower, int cmd,
                      unsigned long arg);
-#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
 static int sam_qeindex(struct qe_lowerhalf_s *lower, struct qe_index_s *dest);
 #endif
 
@@ -122,7 +122,7 @@ static struct sam_lowerhalf_s g_tc0lower =
   .ops      = &g_qecallbacks,
   .tcid     = 0,
   .inuse    = false,
-#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
   .last_pos = 0,
   .last_index = 0,
   .index_cnt = 0
@@ -136,7 +136,7 @@ static struct sam_lowerhalf_s g_tc1lower =
   .ops      = &g_qecallbacks,
   .tcid     = 1,
   .inuse    = false,
-#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
   .last_pos = 0,
   .last_index = 0,
   .index_cnt = 0
@@ -150,7 +150,7 @@ static struct sam_lowerhalf_s g_tc2lower =
   .ops      = &g_qecallbacks,
   .tcid     = 2,
   .inuse    = false,
-#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
   .last_pos = 0,
   .last_index = 0,
   .index_cnt = 0
@@ -164,7 +164,7 @@ static struct sam_lowerhalf_s g_tc3lower =
   .ops      = &g_qecallbacks,
   .tcid     = 3,
   .inuse    = false,
-#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
   .last_pos = 0,
   .last_index = 0,
   .index_cnt = 0
@@ -249,7 +249,7 @@ static int sam_shutdown(struct qe_lowerhalf_s *lower)
   return OK;
 }
 
-#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
 static int32_t sam_qe_pos_16to32b(struct qe_lowerhalf_s *lower, uint32_t current_pos)
 {
   struct sam_lowerhalf_s *priv = (struct sam_lowerhalf_s*) lower;
@@ -277,7 +277,7 @@ static int sam_position(struct qe_lowerhalf_s *lower, int32_t *pos)
   new_pos = sam_tc_getcounter(priv->tch);
 
   /* Return the counter value */
-#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
   *pos = sam_qe_pos_16to32b(lower, new_pos);
 #else
   *pos = (int32_t) new_pos;
@@ -319,7 +319,7 @@ static int sam_reset(struct qe_lowerhalf_s *lower)
 static int sam_ioctl(struct qe_lowerhalf_s *lower, int cmd,
                      unsigned long arg)
 {
-#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
   switch (cmd)
     {
       case QEIOC_GETINDEX:
@@ -339,7 +339,7 @@ static int sam_ioctl(struct qe_lowerhalf_s *lower, int cmd,
 }
 
 
-#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
 static int sam_qeindex(struct qe_lowerhalf_s *lower, struct qe_index_s *dest)
 {
   struct sam_lowerhalf_s *priv = (struct sam_lowerhalf_s*) lower;
@@ -441,7 +441,7 @@ int sam_qeinitialize(const char *devpath, int tc)
    * ATSAMV7's datasheet). Only one register could be used when using triggers
    * which we can't use.  
    */
-#ifdef CONFIG_SAMV7_QE_NO_INDEX_RESET
+#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
   mode = TC_CMR_TCCLKS_XC0 |
          TC_CMR_CAPTURE |
          TC_CMR_LDRA_RISING |
