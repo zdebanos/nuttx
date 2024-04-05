@@ -855,7 +855,8 @@ static int pwm_start(struct pwm_lowerhalf_s *dev,
                                info->channels[i].duty);
 #endif
               pwm_set_polarity(dev, priv->channels[index - 1].channel,
-                               info->channels[i].cpol, info->channels[i].dcpol);
+                               info->channels[i].cpol,
+                               info->channels[i].dcpol);
               pwm_set_output(dev, priv->channels[index - 1].channel,
                              info->channels[i].duty);
 #ifdef CONFIG_PWM_OVERWRITE
