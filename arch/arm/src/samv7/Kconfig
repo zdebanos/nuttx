@@ -711,7 +711,6 @@ config SAMV7_PWM0_CH3_COMP
 	bool "Use complementary output"
 	default n
 
-
 endif
 
 menu "PWM Comparison units"

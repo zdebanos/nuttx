@@ -38,7 +38,6 @@
 
 #include "chip.h"
 #include "arm_internal.h"
-#include "hardware/sam_tc.h"
 #include "sam_tc.h"
 #include "sam_qencoder.h"
 
