@@ -277,7 +277,7 @@ static int sam_position(struct qe_lowerhalf_s *lower, int32_t *pos)
 #ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
   *pos = sam_qe_pos_16to32b(lower, new_pos);
 #else
-  *pos = (int32_t) new_pos;
+  *pos = (int32_t)new_pos;
 #endif
 
   return OK;
@@ -323,7 +323,7 @@ static int sam_ioctl(struct qe_lowerhalf_s *lower, int cmd,
         {
           /* Call the qeindex function */
 
-          sam_qeindex(lower, (struct qe_index_s *) arg);
+          sam_qeindex(lower, (struct qe_index_s *)arg);
           return OK;
         }
 
@@ -350,11 +350,11 @@ static int sam_ioctl(struct qe_lowerhalf_s *lower, int cmd,
 static inline int32_t sam_qe_pos_16to32b(struct qe_lowerhalf_s *lower,
                                          uint32_t current_pos)
 {
-  struct sam_lowerhalf_s *priv = (struct sam_lowerhalf_s *) lower;
+  struct sam_lowerhalf_s *priv = (struct sam_lowerhalf_s *)lower;
 
-  uint32_t new_pos = *(volatile uint32_t *) &priv->last_pos;
-  new_pos += (int16_t) (current_pos - new_pos);
-  *(volatile uint32_t *) &priv->last_pos = new_pos;
+  uint32_t new_pos = *(volatile uint32_t *)&priv->last_pos;
+  new_pos += (int16_t)(current_pos - new_pos);
+  *(volatile uint32_t *)&priv->last_pos = new_pos;
 
   return (int32_t) new_pos;
 }
@@ -373,11 +373,11 @@ static inline int32_t sam_qe_pos_16to32b(struct qe_lowerhalf_s *lower,
 static inline int32_t sam_qe_indx_pos_16to32b(struct qe_lowerhalf_s *lower,
                                               uint32_t current_indx_pos)
 {
-  struct sam_lowerhalf_s *priv = (struct sam_lowerhalf_s *) lower;
+  struct sam_lowerhalf_s *priv = (struct sam_lowerhalf_s *)lower;
 
-  uint32_t new_index = *(volatile uint32_t *) &priv->last_pos;
-  new_index += (int16_t) (current_indx_pos - new_index);
-  *(volatile uint32_t *) &priv->last_index = new_index;
+  uint32_t new_index = *(volatile uint32_t *)&priv->last_pos;
+  new_index += (int16_t)(current_indx_pos - new_index);
+  *(volatile uint32_t *)&priv->last_index = new_index;
 
   return (int32_t) new_index;
 }
@@ -395,11 +395,14 @@ static inline int32_t sam_qe_indx_pos_16to32b(struct qe_lowerhalf_s *lower,
 
 static int sam_qeindex(struct qe_lowerhalf_s *lower, struct qe_index_s *dest)
 {
-  struct sam_lowerhalf_s *priv = (struct sam_lowerhalf_s *) lower;
+  int32_t current_pos;
+  uint32_t status;
+  uint32_t current_indx_pos;
+  bool captured = false;
+  struct sam_lowerhalf_s *priv = (struct sam_lowerhalf_s *)lower;
 
   /* Perform the current position retrieval everytime */
 
-  int32_t current_pos;
   sam_position(lower, &current_pos);
   dest->qenc_pos = current_pos;
 
@@ -409,9 +412,7 @@ static int sam_qeindex(struct qe_lowerhalf_s *lower, struct qe_index_s *dest)
 
   /* Get the interrupt */
 
-  uint32_t status = sam_tc_getpending(handle);
-  uint32_t current_indx_pos;
-  bool captured = false;
+  status = sam_tc_getpending(handle);
 
   /* Check if something has been captured.
    * The reason for using two capture registers is due to their exclusive
