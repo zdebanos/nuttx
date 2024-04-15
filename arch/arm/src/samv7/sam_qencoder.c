@@ -336,7 +336,7 @@ static inline int32_t sam_qe_pos_16to32b(struct qe_lowerhalf_s *lower,
   new_pos += (int16_t)(current_pos - new_pos);
   *(volatile uint32_t *)&priv->last_pos = new_pos;
 
-  return (int32_t) new_pos;
+  return (int32_t)new_pos;
 }
 #endif
 
@@ -359,7 +359,7 @@ static inline int32_t sam_qe_indx_pos_16to32b(struct qe_lowerhalf_s *lower,
   new_index += (int16_t)(current_indx_pos - new_index);
   *(volatile uint32_t *)&priv->last_index = new_index;
 
-  return (int32_t) new_index;
+  return (int32_t)new_index;
 }
 #endif
 
