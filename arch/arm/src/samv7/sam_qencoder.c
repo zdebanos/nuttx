@@ -132,11 +132,6 @@ static struct sam_lowerhalf_s g_tc0lower =
   .ops      = &g_qecallbacks,
   .tcid     = 0,
   .inuse    = false,
-#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
-  .last_pos = 0,
-  .last_index = 0,
-  .index_cnt = 0
-#endif
 };
 #endif
 
@@ -146,11 +141,6 @@ static struct sam_lowerhalf_s g_tc1lower =
   .ops      = &g_qecallbacks,
   .tcid     = 1,
   .inuse    = false,
-#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
-  .last_pos = 0,
-  .last_index = 0,
-  .index_cnt = 0
-#endif
 };
 #endif
 
@@ -160,11 +150,6 @@ static struct sam_lowerhalf_s g_tc2lower =
   .ops      = &g_qecallbacks,
   .tcid     = 2,
   .inuse    = false,
-#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
-  .last_pos = 0,
-  .last_index = 0,
-  .index_cnt = 0
-#endif
 };
 #endif
 
@@ -174,11 +159,6 @@ static struct sam_lowerhalf_s g_tc3lower =
   .ops      = &g_qecallbacks,
   .tcid     = 3,
   .inuse    = false,
-#ifdef CONFIG_SAMV7_QENCODER_ENABLE_GETINDEX
-  .last_pos = 0,
-  .last_index = 0,
-  .index_cnt = 0
-#endif
 };
 #endif
 
