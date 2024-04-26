@@ -710,7 +710,7 @@ config SAMV7_PWM0_CH1_COMP
 	default n
 
 config SAMV7_PWM0_CH1_SYNC
-	bool "Channel 1 as synchronous"
+	bool "Synchronous channel"
 	depends on SAMV7_PWM0_SYNC
 	default n
 
@@ -732,7 +732,7 @@ config SAMV7_PWM0_CH2_COMP
 	default n
 
 config SAMV7_PWM0_CH2_SYNC
-	bool "Channel 2 as synchronous"
+	bool "Synchronous channel"
 	depends on SAMV7_PWM0_SYNC
 	default n
 
@@ -754,7 +754,7 @@ config SAMV7_PWM0_CH3_COMP
 	default n
 
 config SAMV7_PWM0_CH3_SYNC
-	bool "Channel 3 as synchronous"
+	bool "Synchronous channel"
 	depends on SAMV7_PWM0_SYNC
 	default n
 
@@ -955,11 +955,6 @@ config SAMV7_PWM1_CH0_COMP
 	depends on !SAMV7_PWM1_CH0_LONLY
 	default n
 
-config SAMV7_PWM1_CH1_SYNC
-	bool "Channel 1 as synchronous"
-	depends on SAMV7_PWM1_SYNC
-	default n
-
 endif
 
 config SAMV7_PWM1_CH1
@@ -977,8 +972,8 @@ config SAMV7_PWM1_CH1_COMP
 	depends on !SAMV7_PWM1_CH1_LONLY
 	default n
 
-config SAMV7_PWM1_CH2_SYNC
-	bool "Channel 2 as synchronous"
+config SAMV7_PWM1_CH1_SYNC
+	bool "Synchronous channel"
 	depends on SAMV7_PWM1_SYNC
 	default n
 
@@ -999,6 +994,11 @@ config SAMV7_PWM1_CH2_COMP
 	depends on !SAMV7_PWM1_CH2_LONLY
 	default n
 
+config SAMV7_PWM1_CH2_SYNC
+	bool "Synchronous channel"
+	depends on SAMV7_PWM1_SYNC
+	default n
+
 endif
 
 config SAMV7_PWM1_CH3
@@ -1017,7 +1017,7 @@ config SAMV7_PWM1_CH3_COMP
 	default n
 
 config SAMV7_PWM1_CH3_SYNC
-	bool "Channel 3 as synchronous"
+	bool "Synchronous channel"
 	depends on SAMV7_PWM1_SYNC
 	default n
 
