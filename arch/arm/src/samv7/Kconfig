@@ -665,6 +665,17 @@ menuconfig SAMV7_PWM0
 
 if SAMV7_PWM0
 
+config SAMV7_PWM0_SYNC
+	bool "PWM0 synchronous channels"
+	default n
+	---help---
+		This option makes the synchronization between channels possible.
+		This means every synchronized channel has the same clock, the
+		same period and the same alignment. If any channel is defined
+		as synchronous, channel 0 is defined as synchronous too because
+		channel 0's counter is used by other synchronous channels.
+		This option automatically defines channel 0 as synchronous.
+
 config SAMV7_PWM0_CH0
 	bool "PWM0 Channel 0"
 	default n
@@ -697,6 +708,11 @@ config SAMV7_PWM0_CH1_COMP
 	depends on !SAMV7_PWM0_CH1_LONLY
 	default n
 
+config SAMV7_PWM0_CH1_SYNC
+	bool "Channel 1 as synchronous"
+	depends on SAMV7_PWM0_SYNC
+	default n
+
 endif
 
 config SAMV7_PWM0_CH2
@@ -714,6 +730,11 @@ config SAMV7_PWM0_CH2_COMP
 	depends on !SAMV7_PWM0_CH2_LONLY
 	default n
 
+config SAMV7_PWM0_CH2_SYNC
+	bool "Channel 2 as synchronous"
+	depends on SAMV7_PWM0_SYNC
+	default n
+
 endif
 
 config SAMV7_PWM0_CH3
@@ -729,6 +750,11 @@ config SAMV7_PWM0_CH3_LONLY
 config SAMV7_PWM0_CH3_COMP
 	bool "Use complementary output"
 	depends on !SAMV7_PWM0_CH3_LONLY
+	default n
+
+config SAMV7_PWM0_CH3_SYNC
+	bool "Channel 3 as synchronous"
+	depends on SAMV7_PWM0_SYNC
 	default n
 
 endif
@@ -901,6 +927,17 @@ menuconfig SAMV7_PWM1
 
 if SAMV7_PWM1
 
+config SAMV7_PWM1_SYNC
+	bool "PWM1 synchronous channels"
+	default n
+	---help---
+		This option makes the synchronization between channels possible.
+		This means every synchronized channel has the same clock, the
+		same period and the same alignment. If any channel is defined
+		as synchronous, channel 0 is defined as synchronous too because
+		channel 0's counter is used by other synchronous channels.
+		This option automatically defines channel 0 as synchronous.
+
 config SAMV7_PWM1_CH0
 	bool "PWM1 Channel 0"
 	default n
@@ -914,6 +951,11 @@ config SAMV7_PWM1_CH0_LONLY
 config SAMV7_PWM1_CH0_COMP
 	bool "Use complementary output"
 	depends on !SAMV7_PWM1_CH0_LONLY
+	default n
+
+config SAMV7_PWM1_CH1_SYNC
+	bool "Channel 1 as synchronous"
+	depends on SAMV7_PWM1_SYNC
 	default n
 
 endif
@@ -931,6 +973,11 @@ config SAMV7_PWM1_CH1_LONLY
 config SAMV7_PWM1_CH1_COMP
 	bool "Use complementary output"
 	depends on !SAMV7_PWM1_CH1_LONLY
+	default n
+
+config SAMV7_PWM1_CH2_SYNC
+	bool "Channel 2 as synchronous"
+	depends on SAMV7_PWM1_SYNC
 	default n
 
 endif
@@ -965,6 +1012,11 @@ config SAMV7_PWM1_CH3_LONLY
 config SAMV7_PWM1_CH3_COMP
 	bool "Use complementary output"
 	depends on !SAMV7_PWM1_CH3_LONLY
+	default n
+
+config SAMV7_PWM1_CH3_SYNC
+	bool "Channel 3 as synchronous"
+	depends on SAMV7_PWM1_SYNC
 	default n
 
 endif
