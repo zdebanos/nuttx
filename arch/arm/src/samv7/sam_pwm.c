@@ -545,7 +545,7 @@ static void pwm_set_output(struct pwm_lowerhalf_s *dev, uint8_t channel,
                            ub16_t duty)
 {
   struct sam_pwm_s *priv = (struct sam_pwm_s *)dev;
-  uint32_t en_channel;
+  uint16_t regval;
   uint16_t period;
   uint16_t width;
 
@@ -570,25 +570,8 @@ static void pwm_set_output(struct pwm_lowerhalf_s *dev, uint8_t channel,
                  width);
     }
 
-  /* The channel enabling is done here. However, precautions must be made.
-   * If the channel is synchronous, only channel 0 must be enabled.
-   * Otherwise, any channel can be enabled if it's not enabled already.
-   */
-
-  en_channel = CHID_SEL(1 << channel);
-
-  /* Check if the channel is in the synchronous group */
-
-  if (priv->sync & CHID_SEL(1 << channel))
-    {
-      /* Enable only channel 0 (CHID0) */
-
-      en_channel = CHID_SEL(1 << 0);
-    }
-  if (!(pwm_getreg(priv, SAMV7_PWM_SR) & en_channel))
-    {
-      pwm_putreg(priv, SAMV7_PWM_ENA, en_channel);
-    }
+  regval = CHID_SEL(1 << channel);
+  pwm_putreg(priv, SAMV7_PWM_ENA, regval);
 }
 
 /****************************************************************************
