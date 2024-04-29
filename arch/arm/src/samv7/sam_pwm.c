@@ -545,9 +545,9 @@ static void pwm_set_output(struct pwm_lowerhalf_s *dev, uint8_t channel,
                            ub16_t duty)
 {
   struct sam_pwm_s *priv = (struct sam_pwm_s *)dev;
-  uint16_t regval;
   uint16_t period;
   uint16_t width;
+  uint16_t regval;
 
   /* Get the period value */
 
