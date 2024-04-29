@@ -111,7 +111,7 @@ struct sam_pwm_s
   const struct sam_pwm_fault_s *fault;
   uint8_t channels_num;           /* Number of channels */
   uintptr_t base;                 /* Base address of peripheral register */
-  uint8_t sync;                /* Flags of synchronized channels */
+  uint8_t sync;                   /* Flags of synchronized channels */
 };
 
 /* PWM driver methods */
@@ -575,9 +575,9 @@ static void pwm_set_output(struct pwm_lowerhalf_s *dev, uint8_t channel,
   /* The enabling of a channel should be only done on unsynced channels */
 
   if (!(priv->sync & regval))
-  {
-    pwm_putreg(priv, SAMV7_PWM_ENA, regval);
-  }
+    {
+      pwm_putreg(priv, SAMV7_PWM_ENA, regval);
+    }
 }
 
 /****************************************************************************
@@ -1024,8 +1024,11 @@ static int pwm_start(struct pwm_lowerhalf_s *dev,
            * Channel 0's counter is used by all synchronous channels and
            * enabling CH0 results in enabling all synchronous channels.
            *
-           * Enable the CH0 here, because 
+           * Enable the CH0 here after all setting all channel parameters,
+           * because setting polarity configurations requires disabled
+           * channels.
            */
+
           pwm_putreg(priv, SAMV7_PWM_ENA, CHID_SEL(1));
           pwm_putreg(priv, SAMV7_PWM_SCUC, regval);
         }
@@ -1079,7 +1082,7 @@ static int pwm_stop(struct pwm_lowerhalf_s *dev)
     }
 
   /* Just to be sure, disable all sync channels too */
-  
+
   regval = pwm_getreg(priv, SAMV7_PWM_SCM);
   regval &= ~(CHID_SEL(1 << 0) | CHID_SEL(1 << 1) |
               CHID_SEL(1 << 2) | CHID_SEL(1 << 3));
