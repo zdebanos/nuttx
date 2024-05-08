@@ -957,9 +957,7 @@ static int pwm_start(struct pwm_lowerhalf_s *dev,
                      const struct pwm_info_s *info)
 {
   struct sam_pwm_s *priv = (struct sam_pwm_s *)dev;
-#ifdef CONFIG_PWM_OVERWRITE
   uint32_t regval;
-#endif
 
 #ifdef CONFIG_PWM_MULTICHAN
       for (int i = 0; i < PWM_NCHANNELS; i++)
@@ -1018,7 +1016,7 @@ static int pwm_start(struct pwm_lowerhalf_s *dev,
 
       if (priv->sync)
         {
-          uint32_t regval = SCUC_UPDULOCK;
+          regval = SCUC_UPDULOCK;
 
           /* Enable the Channel 0 if synchronous channels are used.
            * Channel 0's counter is used by all synchronous channels and
