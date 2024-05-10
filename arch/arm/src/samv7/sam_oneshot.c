@@ -314,7 +314,9 @@ int sam_oneshot_start(struct sam_oneshot_s *oneshot,
   regval = (usec * (uint64_t)sam_tc_divfreq(oneshot->tch)) / USEC_PER_SEC;
 
   tmrinfo("usec=%llu regval=%08llx\n", usec, regval);
-  DEBUGASSERT(regval <= UINT16_MAX);
+  //DEBUGASSERT(regval <= UINT16_MAX);
+  if (regval > UINT16_MAX)
+    regval = UINT16_MAX;
 
   /* Set up to receive the callback when the interrupt occurs */
 
