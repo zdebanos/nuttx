@@ -298,23 +298,23 @@
  * connected to the High Speed Multimedia Card Interface (HSMCI) of the SAM
  * V71. SD card connector:
  *
- *   ------ ----------------- ---------------------
- *   SAMV71 SAMV71            Shared functionality
- *   Pin    Function
- *   ------ ----------------- ---------------------
- *   PA30   MCDA0 (DAT0)
- *   PA31   MCDA1 (DAT1)
- *   PA26   MCDA2 (DAT2)
- *   PA27   MCDA3 (DAT3)      Camera
- *   PA25   MCCK (CLK)        Shield
- *   PA28   MCCDA (CMD)
- *   PD18   Card Detect (C/D) Shield
- *   ------ ----------------- ---------------------
+ *   -------- -----------------
+ *   SaMoCon  SaMoCon
+ *   Pin      Function
+ *   -------- -----------------
+ *   PA30     MCDA0 (DAT0)
+ *   PA31     MCDA1 (DAT1)
+ *   PA26     MCDA2 (DAT2)
+ *   PA27     MCDA3 (DAT3)
+ *   PA25     MCCK (CLK)
+ *   PA28     MCCDA (CMD)
+ *   PC18     Card Detect (C/D)
+ *   -------- -----------------
  */
 
 #define GPIO_HSMCI0_CD (GPIO_INPUT | GPIO_CFG_DEFAULT | GPIO_CFG_DEGLITCH | \
-                        GPIO_INT_BOTHEDGES | GPIO_PORT_PIOD | GPIO_PIN18)
-#define IRQ_HSMCI0_CD   SAM_IRQ_PD18
+                        GPIO_INT_BOTHEDGES | GPIO_PORT_PIOC | GPIO_PIN18)
+#define IRQ_HSMCI0_CD   SAM_IRQ_PC18
 
 /* USB Related
  *
