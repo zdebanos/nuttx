@@ -9,9 +9,6 @@
 #include <nuttx/analog/adc.h>
 #include <arch/board/board.h>
 
-//#include "chip.h"
-//#include "arm_internal.h"
-
 #include "sam_afec.h"
 #include "samocon.h"
 
@@ -32,29 +29,26 @@
 
 /*
  * Here is a short overview of channels used on the SaMoCon board:
- * AFEC0: 0, 1, 3, 4, 6, 7, 8, 9 
+ * AFEC0: 0, 3, 4, 6, 7, 8, 9, 10
  * AFEC1: 0, 1, 2, 4, 5, 6, 9, 10  
  * 3 external ADCs belonging to AFEC1: 7, 8, 11
  */
 
-static const uint8_t g_chanlist0[AFEC0_CHANNELS] =
-  {
-    0, 3, 4, 6, 7, 8, 9, 10
-  };
 
-//static const uint8_t g_chanlist1[AFEC1_CHANNELS] =
-//  {
-//#ifdef HAVE_EXTERNAL_3ADC
-//    0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11
-//#else
-//    0, 1, 2, 4, 5, 6, 9, 10
-//#endif
-//  };
+/* Put the L channels first! So the PWM trigger for L measurements can
+ * be as late as possible, using as much PWM duty bandwidth as possible.
+ */
+
+static const uint8_t g_chanlist0[AFEC0_CHANNELS] =
+{
+  9, 3, 7, 6, 10, 0, 8, 4
+};
+
 
 static const uint8_t g_chanlist1[AFEC1_CHANNELS] =
-  {
-    0, 1, 2, 4, 5, 6, 9, 10
-  };
+{
+  9, 1, 5, 4, 10, 0, 2, 6
+};
 
 /****************************************************************************
  * Public Functions
