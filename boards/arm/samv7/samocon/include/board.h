@@ -181,99 +181,6 @@
 
 #define BOARD_FWS                  4
 
-///* LED definitions **********************************************************/
-//
-///* LEDs
-// *
-// * There are two yellow LED available on the SAM V71 Xplained Ultra board
-// * that can be turned on and off.  The LEDs can be activated by driving the
-// * connected I/O line to GND.
-// *
-// *   ------ ----------- ---------------------
-// *   SAMV71 Function    Shared functionality
-// *   PIO
-// *   ------ ----------- ---------------------
-// *   PA23   Yellow LED0 EDBG GPIO
-// *   PC09   Yellow LED1 LCD, and Shield
-// *   ------ ----------- ---------------------
-// *
-// * If CONFIG_ARCH_LEDS is not defined, then the user can control the LEDs
-// * in any way.  The following definitions are used to access individual LEDs.
-// */
-//
-///* LED index values for use with board_userled() */
-//
-//#define BOARD_LED0        0
-//#define BOARD_LED1        1
-//#define BOARD_NLEDS       2
-//
-///* LED bits for use with board_userled_all() */
-//
-//#define BOARD_LED0_BIT    (1 << BOARD_LED0)
-//#define BOARD_LED1_BIT    (1 << BOARD_LED1)
-//
-///* These LEDs are not used by the board port unless CONFIG_ARCH_LEDS is
-// * defined.  In that case, the usage by the board port is defined in
-// * include/board.h and src/sam_autoleds.c. The LEDs are used to encode
-// * OS-related events as follows:
-// *
-// *   SYMBOL                     Meaning                      LED state
-// *                                                         LED2   LED1
-// *   ------------------------  --------------------------  ------ ------
-// */
-//
-//#define LED_STARTED          0 /* NuttX has been started   OFF    OFF    */
-//#define LED_HEAPALLOCATE     0 /* Heap has been allocated  OFF    OFF    */
-//#define LED_IRQSENABLED      0 /* Interrupts enabled       OFF    OFF    */
-//#define LED_STACKCREATED     1 /* Idle stack created       ON     OFF    */
-//#define LED_INIRQ            2 /* In an interrupt           No change    */
-//#define LED_SIGNAL           2 /* In a signal handler       No change    */
-//#define LED_ASSERTION        2 /* An assertion failed       No change    */
-//#define LED_PANIC            3 /* The system has crashed   N/C  Blinking */
-//#undef  LED_IDLE               /* MCU is is sleep mode      Not used     */
-//
-///* Thus if LED0 is statically on, NuttX has successfully booted and is,
-// * apparently, running normally.  If LED1 is flashing at approximately
-// * 2Hz, then a fatal error has been detected and the system has halted.
-// *
-// * NOTE: That LED0 is not used after completion of booting and may
-// * be used by other board-specific logic.
-// */
-//
-///* Button definitions *******************************************************/
-//
-///* Buttons
-// *
-// * SAM V71 Xplained Ultra contains three mechanical buttons. One button is
-// * the RESET button connected to the SAM V71 reset line and the others are
-// * generic user configurable buttons. When a button is pressed it will drive
-// * the I/O line to GND.
-// *
-// *   ------ ----------- ---------------------
-// *   SAMV71 Function    Shared functionality
-// *   PIO
-// *   ------ ----------- ---------------------
-// *   RESET  RESET       Trace, Shield, and EDBG
-// *   PA09   SW0         EDBG GPIO and Camera
-// *   PB12   SW1         EDBG SWD and Chip Erase
-// *   ------ ----------- ---------------------
-// *
-// * NOTES:
-// *
-// *   - There are no pull-up resistors connected to the generic user buttons
-// *     so it is necessary to enable the internal pull-up in the SAM V71 to
-// *     use the button.
-// *   - PB12 is set up as a system flash ERASE pin when the firmware boots. To
-// *     use the SW1, PB12 has to be configured as a normal regular I/O pin in
-// *     the MATRIX module. For more information see the SAM V71 datasheet.
-// */
-//
-//#define BUTTON_SW0        0
-//#define BUTTON_SW1        1
-//#define NUM_BUTTONS       2
-//
-//#define BUTTON_SW0_BIT    (1 << BUTTON_SW0)
-//#define BUTTON_SW1_BIT    (1 << BUTTON_SW1)
 
 /* PIO Disambiguation *******************************************************/
 
@@ -298,10 +205,9 @@
  *    There are alternative pin selections only for UART3 TXD.
  */
 
-/*
- * UART3_RXD does not have to be defined since there's only one option defined
- * in samv71_pinmap.h - PD28
- */
+
+/* UART3_RXD doesn't have to be defined since there's only one option */
+
 #define GPIO_UART3_TXD  GPIO_UART3_TXD_2
 
 /* RS232 and RS485
@@ -316,7 +222,7 @@
  *     4     PD19   CTS2
  *    ------ ------ --------
  *
- * No need to define anything. All USART2 signals already defined in samv71_pinmap.h
+ * No need to define anything. All USART2 signals already defined.
  */
 
 /* CAN drivers
@@ -454,8 +360,6 @@
 #define GPIO_PWMB_L2 GPIO_PWMC0_L2
 #define GPIO_PWMB_L3 GPIO_PWMC0_L3
 
-
-
 /* GPIO Hall Sensors Inputs
  *
  * The SaMoCon board includes two inputs for two Hall sensors trios -
@@ -474,7 +378,6 @@
  *   HALLB_IN1 PD14           
  *   HALLB_IN2 PD17   
  */
-
 
 #define HALL0_PORT_TYPE GPIO_PORT_PIOC
 #define HALL1_PORT_TYPE GPIO_PORT_PIOD
@@ -496,8 +399,6 @@
 #define BOARD_NGPIOIN  8 /* HALLs + IRC marks */
 #define BOARD_NGPIOOUT 8 /* INH */
 #define BOARD_NGPIOINT 0 
-
-
 
 
 
@@ -523,21 +424,6 @@ extern "C"
 /****************************************************************************
  * Public Functions Definitions
  ****************************************************************************/
-
-/****************************************************************************
- * Name:  sam_lcdclear
- *
- * Description:
- *   This is a non-standard LCD interface just for the SAM4e-EK board.
- *   Because of the various rotations, clearing the display in the normal
- *   way by writing a sequences of runs that covers the entire display can
- *   be very slow.
- *  Here the display is cleared by simply setting all GRAM memory to the
- *  specified color.
- *
- ****************************************************************************/
-
-void sam_lcdclear(uint16_t color);
 
 #undef EXTERN
 #if defined(__cplusplus)
