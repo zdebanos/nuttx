@@ -130,7 +130,8 @@ void weak_function sam_netinitialize(void)
 #ifdef HAVE_MACADDR
 int sam_emac0_setmac(void)
 {
-  // Hardcoded temporarily!
+  /* Hardcoded temporarily! */
+
   uint8_t mac[6] = {0x00, 0x5d, 0x8a, 0x55, 0xbd, 0xef};
   int ret;
 
