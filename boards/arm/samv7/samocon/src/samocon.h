@@ -89,7 +89,7 @@
 #define HSMCI0_SLOTNO CONFIG_NSH_MMCSDSLOTNO
 #define HSMCI0_MINOR  CONFIG_NSH_MMCSDMINOR
 
-/* Automounter.  Currently only works with HSMCI. */
+/* Automounter */
 
 #if !defined(CONFIG_FS_AUTOMOUNTER) || !defined(HAVE_HSMCI)
 #  undef HAVE_AUTOMOUNTER
@@ -101,6 +101,7 @@
 #endif
 
 /* USB define logic */
+
 #define HAVE_USB             1
 #define HAVE_USBDEV          1
 #define HAVE_USBMONITOR      1
@@ -133,6 +134,7 @@
 #endif
 
 /* Feedback define logic */
+
 #define HAVE_HALL_FEEDBACK   1
 #define HAVE_IRCA_FEEDBACK   1
 #define HAVE_IRCB_FEEDBACK   1
@@ -154,6 +156,7 @@
 
 
 /* I2C define logic */
+
 #define HAVE_MAIN_I2C        1
 #define HAVE_EXTERNAL_I2C    1
 #define HAVE_24XXXX          1
@@ -175,6 +178,7 @@
 #endif
 
 /* SPI define logic */
+
 #define HAVE_W25QXXXJV       1
 #define HAVE_MAIN_SPI0       1
 //#define HAVE_EXTERNAL_SPI1   1
@@ -196,6 +200,7 @@
 #endif
 
 /* Network define logic */
+
 #define HAVE_NETWORK         1
 #define HAVE_HARDCODED_MAC   1
 
@@ -212,6 +217,7 @@
 
 
 /* AD converters define logic */
+
 #define HAVE_AFEC0           1
 #define HAVE_AFEC1           1
 #undef HAVE_EXTERNAL_3ADC    
@@ -233,10 +239,9 @@
 #endif
 
 /* PWM define logic */
+
 #define HAVE_PWM0
 #define HAVE_PWM1
-#define HAVE_COMPLEMENTARY_PWM0
-#define HAVE_COMPLEMENTARY_PWM1
 
 /* procfs File System */
 
@@ -247,14 +252,6 @@
 #    define SAMV71_PROCFS_MOUNTPOINT "/proc"
 #  endif
 #endif
-
-
-/* On-chip Programming Memory */
-
-#if !defined(CONFIG_SAMV7_PROGMEM) || !defined(CONFIG_MTD_PROGMEM)
-#  undef HAVE_PROGMEM_CHARDEV
-#endif
-
 
 /* Do we need to register I2C drivers on behalf of the I2C tool? */
 
@@ -287,9 +284,9 @@
  *   ------ --------- --------- 
  */
 
-#define GPIO_EMAC0_INT    (GPIO_INPUT | GPIO_CFG_PULLUP | GPIO_CFG_DEGLITCH | \
-                           GPIO_INT_FALLING | GPIO_PORT_PIOC | GPIO_PIN25)
-#define IRQ_EMAC0_INT     SAM_IRQ_PC25
+#define GPIO_EMAC0_INT      (GPIO_INPUT | GPIO_CFG_PULLUP | GPIO_CFG_DEGLITCH | \
+                             GPIO_INT_FALLING | GPIO_PORT_PIOC | GPIO_PIN25)
+#define IRQ_EMAC0_INT        SAM_IRQ_PC25
 #define GPIO_EMAC0_LINK_LED (GPIO_OUTPUT | GPIO_PORT_PIOB | GPIO_PIN13)
 
 /* HSMCI SD Card Detect
@@ -330,13 +327,13 @@
  */
 
 
-#warning "Need to set up USB_OVERCURR in documentation!! Gitlab issue"
-#define GPIO_VBUSON (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_OUTPUT_SET | \
-                     GPIO_PORT_PIOC | GPIO_PIN21)
-#define GPIO_USB_OVERCURR (GPIO_INPUT | GPIO_CFG_PULLUP | GPIO_PORT_PIOD | \
-                           GPIO_PIN29 | GPIO_CFG_DEGLITCH | GPIO_INT_BOTHEDGES)
-#define GPIO_USB_TUSB321_ID (GPIO_INPUT | GPIO_CFG_PULLUP | GPIO_PORT_PIOA | \
-                             GPIO_PIN6)
+#warning "Need to set up USB_OVERCURR in documentation!"
+#define GPIO_VBUSON           (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_OUTPUT_SET | \
+                               GPIO_PORT_PIOC | GPIO_PIN21)
+#define GPIO_USB_OVERCURR     (GPIO_INPUT | GPIO_CFG_PULLUP | GPIO_PORT_PIOD | \
+                               GPIO_PIN29 | GPIO_CFG_DEGLITCH | GPIO_INT_BOTHEDGES)
+#define GPIO_USB_TUSB321_ID   (GPIO_INPUT | GPIO_CFG_PULLUP | GPIO_PORT_PIOA | \
+                              GPIO_PIN6)
 #define IRQ_USB_HOST_OVERCURR SAM_IRQ_PD29
 
 
@@ -363,7 +360,6 @@
  *
  */
 
-/* No need to define any timer pins. Already defined in samv71_pinmap.h */
 #define IRCA_TC      2
 #define IRCA_DEVPATH "/dev/qe0"
 #define IRCB_TC      0
@@ -418,6 +414,7 @@
 #define W25QXXXJV_SPI_CSMEM (GPIO_OUTPUT | GPIO_PORT_PIOC | GPIO_PIN28) 
 
 /* HALL inputs */
+
 #define HAVE_HALLA  1
 #define HAVE_HALLB  1
 
@@ -425,8 +422,6 @@
  * See the SaMoCon's wiki for external pinout.
  * TODO
  */
-
-#warning "Unite External pinouts"
 
 /* SPI cannot be combined with external AD converters */
 /* Prioritize external AD converters instead of SPI1 */
@@ -448,30 +443,6 @@
 /****************************************************************************
  * Public Functions Definitions
  ****************************************************************************/
-
-/****************************************************************************
- * Name: sam_sdram_config
- *
- * Description:
- *   Configures the on-board SDRAM.  SAMV71 Xplained Ultra features one
- *   external IS42S16100E-7BLI, 512Kx16x2, 10ns, SDRAM. SDRAM0 is connected
- *   to chip select NCS1.
- *
- *  Input Parameters:
- *     None
- *
- *  Assumptions:
- *    The DDR memory regions is configured as strongly ordered memory.
- *    When we complete initialization of SDRAM and it is ready for use,
- *    we will make DRAM into normal memory.
- *
- ****************************************************************************/
-
-#ifdef CONFIG_SAMV7_SDRAMC
-void sam_sdram_config(void);
-#else
-#  define sam_sdram_config(t)
-#endif
 
 /****************************************************************************
  * Name: sam_bringup
@@ -538,8 +509,8 @@ void sam_netinitialize(void);
  * Name: sam_emac0_setmac
  *
  * Description:
- *   Read the Ethernet MAC address from the AT24 FLASH and configure the
- *   Ethernet driver with that address.
+ *   Currently, this function sets a MAC which is hardcoded in the function
+ *   itself.
  *
  ****************************************************************************/
 
