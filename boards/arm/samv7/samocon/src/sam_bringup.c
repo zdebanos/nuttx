@@ -131,7 +131,6 @@ int sam_bringup(void)
   /* Initialize all i2c buses. */
 #if defined(HAVE_MAIN_I2C) || defined(HAVE_EXTERNAL_I2C)
   ret = sam_i2c_init();
-  printf("i2c ret = %d\n", ret);
 #endif
 
 #ifdef CONFIG_SAMV7_MCAN
