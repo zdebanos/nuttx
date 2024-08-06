@@ -259,6 +259,22 @@ int sam_bringup(void)
   sam_gpio_init();
 #endif
 
+#if defined(CONFIG_SAMV7_SPI0_MASTER)
+  sam_spidev_initialize();
+#endif
+#if defined(HAVE_W25QXXXJV)
+  ret = sam_w25qxxxjv_init();
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "W25 Init failed!\n", ret);
+    }
+  sam_flash_init();
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "SAM Flash init failed!\n", ret);
+    }
+#endif
+
   UNUSED(ret);
   return OK;
 }

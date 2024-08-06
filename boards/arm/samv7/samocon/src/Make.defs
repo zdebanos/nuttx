@@ -20,7 +20,7 @@
 
 include $(TOPDIR)/Make.defs
 
-CSRCS = sam_boot.c
+CSRCS = sam_boot.c sam_progmem_partition.c
 
 ifeq ($(CONFIG_BOARDCTL),y)
 CSRCS += sam_appinit.c sam_bringup.c
@@ -37,7 +37,7 @@ CSRCS += sam_usbdev.c
 endif
 
 ifeq ($(CONFIG_SAMV7_SPI),y)
-CSRCS += sam_spi.c
+CSRCS += sam_spi.c sam_w25qxxxjv.c
 endif
 
 ifeq ($(CONFIG_USBMSC),y)
