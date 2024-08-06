@@ -57,9 +57,15 @@ void sam_spidev_initialize(void)
 {
 #ifdef CONFIG_SAMV7_SPI0_MASTER
   /* Configure CSs for SPI0 peripheral */
+
   sam_configgpio(GPIO_SPI0_CS0);
   sam_configgpio(GPIO_SPI0_CS1);
   sam_configgpio(GPIO_SPI0_CS2);
+  sam_configgpio(W25QXXXJV_SPI_CSMEM);
+
+  /* Init W25 MEM_HOLD */
+  sam_configgpio(W25QXXXJV_MEM_HOLD);
+
 #endif /* CONFIG_SAMV7_SPI0_MASTER */
 
 #ifdef CONFIG_SAMV7_SPI0_SLAVE
@@ -136,31 +142,13 @@ void sam_spidev_initialize(void)
 #ifdef CONFIG_SAMV7_SPI0_MASTER
 void sam_spi0select(uint32_t devid, bool selected)
 {
-  spiinfo("devid: %d CS: %s\n", (int)devid,
-          selected ? "assert" : "de-assert");
-
   switch (devid)
     {
-#ifdef CONFIG_IEEE802154_MRF24J40
-      case SPIDEV_IEEE802154(0):
-
-        /* Set the GPIO low to select and high to de-select */
-
-#if defined(CONFIG_SAMV71XULT_MB1_BEE)
-        sam_gpiowrite(CLICK_MB1_CS, !selected);
-#elif defined(CONFIG_SAMV71XULT_MB2_BEE)
-        sam_gpiowrite(CLICK_MB2_CS, !selected);
-#endif
+      case SPIDEV_FLASH(0):
+        sam_gpiowrite(W25QXXXJV_SPI_CSMEM, !selected);
         break;
-#endif
-
-#ifdef CONFIG_LCD_ST7789
-      case SPIDEV_DISPLAY(0):
-        sam_gpiowrite(SPI0_NPCS1, !selected);
-        break;
-#endif
-
       default:
+        sam_gpiowrite(W25QXXXJV_SPI_CSMEM, true);
         break;
     }
 }

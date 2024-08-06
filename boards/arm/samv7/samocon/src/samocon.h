@@ -188,8 +188,8 @@
 #  error "Can't have QSPI on the SaMoCon board!!"
 #endif 
 
-#if defined(HAVE_W25QXXXJV) && !defined(CONFIG_MTD_W25QXXXJV)
-#  warning "Configure CONFIG_MTD_W25QXXXJV to use the W25 flash!"
+#if defined(HAVE_W25QXXXJV) && !defined(CONFIG_MTD_W25)
+#  warning "Configure CONFIG_MTD_W25 to use the W25 flash!"
 #  undef HAVE_W25QXXXJV
 #endif
 
@@ -392,7 +392,6 @@
 #define GPIO_SPI0_CS2 (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_OUTPUT_SET | \
                        GPIO_PORT_PIOC | GPIO_PIN7)
 
-
 /* W25Q32J SPI FLASH
  *
  * SPI0 is used as a main SPI routed onto a main connector.
@@ -407,10 +406,15 @@
  *   SPI_CSMEM  PC28
  */
 
+#define W25QXXXJV_MEM_HOLD  (GPIO_OUTPUT | GPIO_CFG_PULLDOWN | GPIO_PORT_PIOD | \
+                             GPIO_PIN27 | GPIO_OUTPUT_SET)
+#define W25QXXXJV_SPI_CSMEM (GPIO_OUTPUT | GPIO_PORT_PIOC | GPIO_PIN28 | \
+                             GPIO_OUTPUT_SET)
 
-#define W25QXXXJV_MEM_HOLD  (GPIO_OUTPUT | GPIO_CFG_PULLDOWN | GPIO_PORT_PIOD \
-                             GPIO_PIN27)
-#define W25QXXXJV_SPI_CSMEM (GPIO_OUTPUT | GPIO_PORT_PIOC | GPIO_PIN28) 
+/* Bootloader stuff */
+
+#define W25QXXJV_MTD_MINOR   1
+#define PROGMEM_MTD_MINOR   0
 
 /* HALL inputs */
 
@@ -459,12 +463,25 @@ int sam_bringup(void);
  * Name: sam_spidev_initialize
  *
  * Description:
- *   Called to configure SPI chip select GPIO pins for the SAMV71-XULT board.
+ *   Called to configure SPI chip select GPIO pins for the SaMoCon board.
  *
  ****************************************************************************/
 
 #ifdef CONFIG_SAMV7_SPI
 void sam_spidev_initialize(void);
+#endif
+
+
+/****************************************************************************
+ * Name: sam_w25qxxxjv_init
+ *
+ * Description:
+ *   Called to configure the onboards Winbond flash.
+ *
+ ****************************************************************************/
+
+#ifdef HAVE_W25QXXXJV
+int sam_w25qxxxjv_init(void);
 #endif
 
 /****************************************************************************
@@ -536,6 +553,8 @@ int sam_pwm_init(void);
 #ifdef CONFIG_DEV_GPIO
 int sam_gpio_init(void);
 #endif
+
+int sam_flash_init(void);
 
 #endif /* __ASSEMBLY__ */
 #endif /* __BOARDS_ARM_SAMV7_SAMV71_XULT_SRC_SAMV71_XULT_H */
