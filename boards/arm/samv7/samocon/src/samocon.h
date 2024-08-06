@@ -50,7 +50,7 @@
 #  warning "Enable HSMCI0 peripheral to support MMC/SD!"
 #  undef HAVE_HSMCI
 #endif
-//#define HAVE_AUTOMOUNTER     1
+#define HAVE_AUTOMOUNTER     1
 
 /* The SD_DET pin - detection of the inserted card */
 /* The SD_DET pin is at PC18 */
@@ -281,13 +281,15 @@
  *   PD09   GMDIO     MDIO
  *   PC25   GPIO      INTERRUPT 
  *   PB13   GPIO      LINK LED
+ *   PA06   GPIO      RESET
  *   ------ --------- --------- 
  */
 
+#define GPIO_EMAC0_LINK_LED (GPIO_OUTPUT | GPIO_PORT_PIOB | GPIO_PIN13)
+#define GPIO_PHY_RESET      (GPIO_OUTPUT | GPIO_PORT_PIOA | GPIO_PIN6)
 #define GPIO_EMAC0_INT      (GPIO_INPUT | GPIO_CFG_PULLUP | GPIO_CFG_DEGLITCH | \
                              GPIO_INT_FALLING | GPIO_PORT_PIOC | GPIO_PIN25)
 #define IRQ_EMAC0_INT        SAM_IRQ_PC25
-#define GPIO_EMAC0_LINK_LED (GPIO_OUTPUT | GPIO_PORT_PIOB | GPIO_PIN13)
 
 /* HSMCI SD Card Detect
  *
@@ -321,13 +323,11 @@
  * powering is desired. USB_EN is at PC21 and is active high.
  *
  * The power switch also has /FLG pin (SaMoCon name is USB_OVERCURR)
- * indicating overccurent through the power switch or over-temperature.
+ * indicating overcurrent through the power switch or over-temperature.
  * It is an open drain output and is active LOW. The USB_OVERCURR pin
- * is at TODO
+ * is at PD29.
  */
 
-
-#warning "Need to set up USB_OVERCURR in documentation!"
 #define GPIO_VBUSON           (GPIO_OUTPUT | GPIO_CFG_DEFAULT | GPIO_OUTPUT_SET | \
                                GPIO_PORT_PIOC | GPIO_PIN21)
 #define GPIO_USB_OVERCURR     (GPIO_INPUT | GPIO_CFG_PULLUP | GPIO_PORT_PIOD | \
@@ -360,11 +360,10 @@
  *
  */
 
-#define IRCA_TC      2
-#define IRCA_DEVPATH "/dev/qe0"
-#define IRCB_TC      0
-#define IRCB_DEVPATH "/dev/qe1"
-
+#define IRCA_TC        2
+#define IRCA_DEVPATH   "/dev/qe0"
+#define IRCB_TC        0
+#define IRCB_DEVPATH   "/dev/qe1"
 
 /* SPI Peripherals
  * 
