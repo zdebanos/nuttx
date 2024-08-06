@@ -4108,18 +4108,6 @@ menu "QEncoder Driver"
 	depends on SENSORS_QENCODER
 	depends on SAMV7_HAVE_TC
 
-config SAMV7_QE_NO_INDEX_RESET
-	bool "Index signal does not reset the counter"
-	default n
-	---help---
-		Index signal does not reset the internal counter.
-		However, each time index is hit, capture A and B registers
-		are used to save the counter's value instead of
-		resetting it.
-
-		This provides support for the GETINDEX ioctl call
-		with the qe_index_s struct.
-
 config SAMV7_TC0_QE
 	bool "TC0"
 	default n
