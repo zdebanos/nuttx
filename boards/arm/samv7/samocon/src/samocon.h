@@ -181,8 +181,8 @@
 
 #define HAVE_W25QXXXJV       1
 #define HAVE_MAIN_SPI0       1
-//#define HAVE_EXTERNAL_SPI1   1
-#undef HAVE_EXTERNAL_3ADC
+#undef HAVE_EXTERNAL_SPI1
+#define HAVE_EXTERNAL_3ADC   1
 
 #ifdef CONFIG_SAMV7_QSPI
 #  error "Can't have QSPI on the SaMoCon board!!"
@@ -220,7 +220,6 @@
 
 #define HAVE_AFEC0           1
 #define HAVE_AFEC1           1
-#undef HAVE_EXTERNAL_3ADC    
 
 #if defined(HAVE_AFEC0) && !defined(CONFIG_SAMV7_AFEC0)
 #   warning "Configure CONFIG_SAMV7_AFEC0 for AFEC0!"
