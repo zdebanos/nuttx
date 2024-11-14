@@ -45,9 +45,14 @@ static const uint8_t g_chanlist0[AFEC0_CHANNELS] =
 };
 
 
+
 static const uint8_t g_chanlist1[AFEC1_CHANNELS] =
 {
+#ifdef HAVE_EXTERNAL_3ADC
+  9, 1, 5, 4, 10, 0, 2, 6, 8, 7, 11
+#else
   9, 1, 5, 4, 10, 0, 2, 6
+#endif
 };
 
 /****************************************************************************
