@@ -78,6 +78,10 @@ ifeq ($(CONFIG_DEV_GPIO),y)
 CSRCS += sam_gpio.c
 endif
 
+ifeq ($(CONFIG_SYSTEMTICK_HOOK),y)
+CSRCS += sam_timerhook.c
+endif
+
 .PHONY = context distclean
 
 $(SCRIPTOUT): $(LDSCRIPT_TEMPLATE) $(CONFIGFILE)
