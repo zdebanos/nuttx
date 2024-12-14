@@ -27,6 +27,9 @@
 
 #include <nuttx/config.h>
 #include <stdbool.h>
+#ifdef CONFIG_SYSTEMTICK_HOOK
+#include <semaphore.h>
+#endif
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -424,6 +427,10 @@ extern "C"
 /****************************************************************************
  * Public Functions Definitions
  ****************************************************************************/
+
+#ifdef CONFIG_SYSTEMTICK_HOOK
+extern sem_t g_waitsem;
+#endif
 
 #undef EXTERN
 #if defined(__cplusplus)
