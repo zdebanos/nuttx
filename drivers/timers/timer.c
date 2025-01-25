@@ -34,6 +34,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <debug.h>
+#include <semaphore.h>
 
 #include <nuttx/irq.h>
 #include <nuttx/lib/lib.h>
@@ -62,6 +63,10 @@ struct timer_upperhalf_s
 
   struct timer_notify_s notify;
   struct sigwork_s work;
+
+  /* Semaphore notification */
+
+  struct timer_notify_sem_s notify_sem;
 
   /* The contained lower-half driver */
 
@@ -129,6 +134,14 @@ static bool timer_notifier(FAR uint32_t *next_interval_us, FAR void *arg)
   nxsig_notification(notify->pid, &notify->event, SI_QUEUE, &upper->work);
 
   return notify->periodic;
+}
+
+static bool timer_semnotifier(FAR uint32_t *next_interval_us, FAR void *arg)
+{
+  FAR struct timer_upperhalf_s *upper = (struct timer_upperhalf_s *)arg;
+  DEBUGASSERT(upper != NULL);
+  sem_post(upper->notify_sem.semaphore);
+  return upper->notify_sem.periodic;
 }
 
 /****************************************************************************
@@ -371,6 +384,23 @@ static int timer_ioctl(FAR struct file *filep, int cmd, unsigned long arg)
           }
       }
       break;
+    case TCIOC_SEMPOST:
+      {
+        FAR struct timer_notify_sem_s *notify =
+          (FAR struct timer_notify_sem_s *)((uintptr_t)arg);
+
+        if (notify != NULL)
+          {
+            memcpy(&upper->notify_sem, notify,
+                   sizeof(struct timer_notify_sem_s));
+            ret = timer_setcallback((FAR void *)upper, timer_semnotifier,
+                                    (FAR void *)upper);
+          }
+        else
+          {
+            ret = -EINVAL;
+          }
+      }
 
     /* cmd:         TCIOC_MAXTIMEOUT
      * Description: Get the maximum supported timeout value
