@@ -34,6 +34,7 @@
 #include <nuttx/fs/ioctl.h>
 #include <errno.h>
 #include <signal.h>
+#include <semaphore.h>
 #include <stdbool.h>
 #include <sys/types.h>
 #include <assert.h>
@@ -84,6 +85,7 @@
 #define TCIOC_SETTIMEOUT   _TCIOC(0x0004)
 #define TCIOC_NOTIFICATION _TCIOC(0x0005)
 #define TCIOC_MAXTIMEOUT   _TCIOC(0x0006)
+#define TCIOC_SEMPOST      _TCIOC(0x0007)
 
 /* Bit Settings *************************************************************/
 
@@ -153,6 +155,12 @@ struct timer_notify_s
   struct sigevent event;    /* Describe the way a task is to be notified */
   pid_t           pid;      /* The ID of the task/thread to receive the signal */
   bool            periodic; /* True for periodic notifications */
+};
+
+struct timer_notify_sem_s
+{
+  sem_t *semaphore;
+  bool  periodic;
 };
 
 /* This structure provides the "lower-half" driver operations available to
