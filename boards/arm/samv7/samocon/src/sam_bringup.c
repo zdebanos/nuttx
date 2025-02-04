@@ -48,6 +48,8 @@
 #include <nuttx/video/fb.h>
 
 #include "sam_twihs.h"
+#include "sam_tc_lowerhalf.h"
+#include "sam_tc.h"
 #include "samocon.h"
 
 #if defined(HAVE_ROMFS) && !defined(CONFIG_FS_ROMFS)
@@ -131,6 +133,14 @@ int sam_bringup(void)
   /* Initialize all i2c buses. */
 #if defined(HAVE_MAIN_I2C) || defined(HAVE_EXTERNAL_I2C)
   ret = sam_i2c_init();
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "I2C init failed %d\n", ret);
+    }
+  else
+    {
+      syslog(LOG_INFO, "I2C init OK\n");
+    }
 #endif
 
 #ifdef CONFIG_SAMV7_MCAN
@@ -139,16 +149,25 @@ int sam_bringup(void)
   ret = sam_can_setup();
   if (ret < 0)
     {
-      syslog(LOG_ERR, "ERROR: sam_can_setup failed: %d\n", ret);
+      syslog(LOG_ERR, "CAN init failed %d\n", ret);
+    }
+  else
+    {
+      syslog(LOG_INFO, "CAN init OK\n");
     }
 #endif
 
 #if defined(HAVE_IRCA_FEEDBACK) || defined(HAVE_IRCB_FEEDBACK)
   /* Configure quadrature encoder feedbacks */
+
   ret = sam_qencs_init();
   if (ret < 0)
     {
-      printf("QENC init returned %d\n", ret);
+      syslog(LOG_ERR, "IRC init failed %d\n", ret);
+    }
+  else
+    {
+      syslog(LOG_INFO, "IRC init OK\n");
     }
 #endif
 
@@ -161,7 +180,11 @@ int sam_bringup(void)
   ret = sam_emac0_setmac();
   if (ret < 0)
     {
-      syslog(LOG_ERR, "ERROR: sam_emac0_setmac() failed: %d\n", ret);
+      syslog(LOG_ERR, "sam_emac0_setmac() failed %d\n", ret);
+    }
+  else
+    {
+      syslog(LOG_INFO, "sam_emac0_setmac() OK\n");
     }
 #endif
 
@@ -171,8 +194,12 @@ int sam_bringup(void)
   ret = nx_mount(NULL, SAMV71_PROCFS_MOUNTPOINT, "procfs", 0, NULL);
   if (ret < 0)
     {
-      syslog(LOG_ERR, "ERROR: Failed to mount procfs at %s: %d\n",
+      syslog(LOG_ERR, "Failed to mount procfs at %s: %d\n",
              SAMV71_PROCFS_MOUNTPOINT, ret);
+    }
+  else
+    {
+      syslog(LOG_INFO, "procfs mounted at %s\n", SAMV71_PROCFS_MOUNTPOINT);
     }
 #endif
 
@@ -248,15 +275,39 @@ int sam_bringup(void)
    */
 
 #if defined(HAVE_AFEC0) || defined(HAVE_AFEC1)
-  sam_adc_init();
+  ret = sam_adc_init();
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "ADC init failed %d\n", ret);
+    }
+  else
+    {
+      syslog(LOG_INFO, "ADC init OK\n");
+    }
 #endif
 
 #if defined(HAVE_PWM0) || defined(HAVE_PWM1)
-  sam_pwm_init();
+  ret = sam_pwm_init();
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "PWM init failed %d\n", ret);
+    }
+  else
+    {
+      syslog(LOG_INFO, "PWM init OK\n");
+    }
 #endif
 
 #if defined(CONFIG_DEV_GPIO)
-  sam_gpio_init();
+  ret = sam_gpio_init();
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "GPIO init failed %d\n", ret);
+    }
+  else
+    {
+      syslog(LOG_INFO, "GPIO init OK");
+    }
 #endif
 
 #if defined(CONFIG_SAMV7_SPI0_MASTER)
@@ -266,15 +317,27 @@ int sam_bringup(void)
   ret = sam_w25qxxxjv_init();
   if (ret < 0)
     {
-      syslog(LOG_ERR, "W25 Init failed!\n", ret);
+      syslog(LOG_ERR, "W25 init failed, ret=%d\n", ret);
     }
   sam_flash_init();
   if (ret < 0)
     {
-      syslog(LOG_ERR, "SAM Flash init failed!\n", ret);
+      syslog(LOG_ERR, "SAM Flash init failed, ret=%d\n", ret);
+    }
+#endif
+#if defined(CONFIG_TIMER) && defined(CONFIG_SAMV7_TC3)
+  /* for timerhook */
+
+  ret = sam_timer_initialize("/dev/timer9", TC_CHAN9);
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "TC_CHAN9 init failed %d\n", ret);
+    }
+  else
+    {
+      syslog(LOG_INFO, "TC_CHAN9 init OK\n");
     }
 #endif
 
-  UNUSED(ret);
   return OK;
 }
