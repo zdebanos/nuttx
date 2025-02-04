@@ -82,33 +82,6 @@
  * Private Data
  ****************************************************************************/
 
-#if defined(CONFIG_SAMV7_PROGMEM_OTA_PARTITION)
-static struct mtd_partition_s g_mtd_partition_table[] =
-{
-  {
-    .offset  = CONFIG_SAMV7_OTA_PRIMARY_SLOT_OFFSET,
-    .size    = CONFIG_SAMV7_OTA_SLOT_SIZE,
-    .devpath = CONFIG_SAMV7_OTA_PRIMARY_SLOT_DEVPATH
-  },
-  {
-    .offset  = CONFIG_SAMV7_OTA_SECONDARY_SLOT_OFFSET,
-    .size    = CONFIG_SAMV7_OTA_SLOT_SIZE,
-    .devpath = CONFIG_SAMV7_OTA_SECONDARY_SLOT_DEVPATH
-  },
-  {
-    .offset  = CONFIG_SAMV7_OTA_SCRATCH_OFFSET,
-    .size    = CONFIG_SAMV7_OTA_SCRATCH_SIZE,
-    .devpath = CONFIG_SAMV7_OTA_SCRATCH_DEVPATH
-  }
-};
-
-static const size_t g_mtd_partition_table_size =
-    nitems(g_mtd_partition_table);
-#else
-#  define g_mtd_partition_table         NULL
-#  define g_mtd_partition_table_size    0
-#endif /* CONFIG_SAMV7_PROGMEM_OTA_PARTITION */
-
 /****************************************************************************
  * Private Functions
  ****************************************************************************/
