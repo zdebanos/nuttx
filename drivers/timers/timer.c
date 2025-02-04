@@ -226,6 +226,7 @@ static int timer_close(FAR struct file *filep)
   if (upper->crefs > 0)
     {
       upper->crefs--;
+      /* REVISIT: shouldn't we stop the timer? */
     }
 
   nxmutex_unlock(&upper->lock);
