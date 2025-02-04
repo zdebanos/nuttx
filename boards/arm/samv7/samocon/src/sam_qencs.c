@@ -22,7 +22,6 @@ int sam_qencs_init(void)
     ret = sam_qeinitialize(IRCA_DEVPATH, IRCA_TC);
     if (ret < 0)
       {
-        printf("Failed to register %s\n", IRCA_DEVPATH);
         return ret;
       }
 #endif
@@ -30,7 +29,6 @@ int sam_qencs_init(void)
     ret = sam_qeinitialize(IRCB_DEVPATH, IRCB_TC);
     if (ret < 0)
       {
-        printf("Failed to register %s\n", IRCB_DEVPATH);
         return ret;
       }
 #endif
