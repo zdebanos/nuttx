@@ -34,7 +34,30 @@ config SAMOCON_ROMFS_ROMDISK_SECTSIZE
 config SAMOCON_ROMFS_MOUNT_MOUNTPOINT
 	string "ROMFS mount point"
 	default "/bin"
+	
 
 endif # SAMOCON_ROMFS_MOUNT
 
 endif # ARCH_BOARD_SAMOCON
+
+menuconfig BOARD_FORMAT_NXBOOT
+  bool "NXBoot bootable format"
+  default n
+  select SAMV7_PROGMEM_OTA_PARTITION
+  ---help---
+    The NXBoot support of loading the firmware images.
+
+if BOARD_FORMAT_NXBOOT
+
+comment "NXBoot Application Image OTA Update support"
+
+config BOARD_PRIMARY_SLOT_OFFSET
+  hex "NXBoot application image primary slot offset"
+  default 0x20000
+
+config BOARD_SLOT_SIZE
+  hex "NXBoot application image slot size (in bytes)"
+  default 0xe0000
+
+endif # BOARD_FORMAT_NXBOOT
+

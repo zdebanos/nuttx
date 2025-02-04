@@ -204,7 +204,7 @@
 #define HAVE_NETWORK         1
 #define HAVE_HARDCODED_MAC   1
 
-#if defined(HAVE_HARDCODED_MAC)
+#if defined(HAVE_HARDCODED_MAC) && defined(CONFIG_NET)
 #   define HAVE_MACADDR
 #endif
 
@@ -239,8 +239,10 @@
 
 /* PWM define logic */
 
-#define HAVE_PWM0
+#ifdef CONFIG_PWM
+#define HAVE_PWM0 
 #define HAVE_PWM1
+#endif
 
 /* procfs File System */
 
