@@ -52,17 +52,6 @@
  * Private Data
  ****************************************************************************/
 
-//static struct mtd_partition_s g_mtd_partition_table[] =
-//{
-  //{
-    //.offset  = CONFIG_SAMV7_OTA_PRIMARY_SLOT_OFFSET,
-    //.size    = CONFIG_SAMV7_OTA_SLOT_SIZE,
-    //.devpath = "/dev/ota0"
-  //},
-//};
-
-#warning "TODO: MCUBOOT"
-
 static struct mtd_partition_s g_mtd_partition_table[] =
 {
   {
