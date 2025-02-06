@@ -310,6 +310,16 @@ int sam_bringup(void)
     {
       syslog(LOG_INFO, "TC_CHAN9 init OK\n");
     }
+  
+  ret = sam_timer_initialize("/dev/timer10", TC_CHAN10);
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "TC_CHAN10 init failed %d\n", ret);
+    }
+  else
+    {
+      syslog(LOG_INFO, "TC_CHAN10 init OK\n");
+    }
 #endif
 
   return OK;
