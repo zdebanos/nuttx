@@ -68,11 +68,6 @@ typedef enum
 static struct mtd_partition_s g_mtd_partition_table[] =
 {
   {
-    .size    = 0x8000, /* 32KiB, configuration, timezone */
-    .devpath = "/etc",
-    .type    = MTD_TYPE_SMARTFS,
-  },
-  {
     .size    = 0x1E0000, /* !MiB, MCU boot partition */
     .devpath = "/dev/ota1",
     .type    = MTD_TYPE_BCH,
