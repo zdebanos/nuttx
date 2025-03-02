@@ -1,0 +1,2 @@
+echo "===== Launching NX-SHV Firmware Updater ====="
+nx_shv_fwupdater >/dev/null &
