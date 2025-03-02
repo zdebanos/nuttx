@@ -1,0 +1,3 @@
+# rc.sysinit file: kept here for future upgrades
+
+echo "sysinit: nothing to do"

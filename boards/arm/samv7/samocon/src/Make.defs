@@ -32,6 +32,10 @@ ifeq ($(CONFIG_SAMV7_EMAC),y)
 CSRCS += sam_ethernet.c
 endif
 
+ifeq ($(CONFIG_ETC_ROMFS),y)
+CSRCS += etc_romfs.c
+endif
+
 ifeq ($(CONFIG_SAMV7_USBDEVHS),y)
 CSRCS += sam_usbdev.c
 endif
