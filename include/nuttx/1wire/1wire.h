@@ -31,6 +31,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <nuttx/fs/ioctl.h>
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -47,6 +48,12 @@
 #define ONEWIRE_CMD_READ_ROM         0x33
 #define ONEWIRE_CMD_MATCH_ROM        0x55
 #define ONEWIRE_CMD_RESUME           0xa5
+
+/* Supported ioctl commands */
+
+/* See drivers/eeprom/1wire_ds2xxx.c */
+
+#define ONEWIREIOC_EE_DS2XXX_SETROM          _1WIREIOC(0x0001)
 
 /****************************************************************************
  * Name: ONEWIRE_RESET

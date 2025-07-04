@@ -36,6 +36,12 @@ ifeq ($(CONFIG_I2C_EE_24XX),y)
 CSRCS += i2c_xx24xx.c
 endif
 
+# Include the 1WIRE driver for DS2XXX EEPROMs
+
+ifeq ($(CONFIG_1WIRE_EE_DS2XXX),y)
+CSRCS += 1wire_ds2xxx.c
+endif
+
 # Include build support
 
 DEPPATH += --dep-path eeprom

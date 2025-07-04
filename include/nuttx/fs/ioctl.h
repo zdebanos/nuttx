@@ -109,6 +109,7 @@
 #define _PCIBASE        (0x4100) /* Pci ioctl commands */
 #define _I3CBASE        (0x4200) /* I3C driver ioctl commands */
 #define _MSIOCBASE      (0x4300) /* Mouse ioctl commands */
+#define _1WIREBASE      (0x4400) /* 1wire ioctl commands */
 #define _WLIOCBASE      (0x8b00) /* Wireless modules ioctl network commands */
 
 /* boardctl() commands share the same number space */
@@ -760,6 +761,11 @@
 
 #define _I3CIOCVALID(c)   (_IOC_TYPE(c)==_I3CBASE)
 #define _I3CIOC(nr)       _IOC(_I3CBASE,nr)
+
+/* 1WIRE driver ioctl definitions *******************************************/
+
+#define _1WIREIOCVALID(c) (_IOC_TYPE(c)==_1WIREBASE)
+#define _1WIREIOC(nr)     _IOC(_1WIREBASE,nr)
 
 /* Force Feedback driver command definitions ********************************/
 

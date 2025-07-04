@@ -59,4 +59,19 @@ config AT24CS_UUID
 
 endif # I2C_EE_24XX
 
+config 1WIRE_EE_DS2XXX
+	bool "Support for Maxim/Analog Devices 1wire DS2XXX EEPROM devices"
+	default n
+	depends on 1WIRE
+	---help---
+		Enable support for 1WIRE DS2XXX EEPROMs.
+		The list of supported devices:
+		DS2430:   32 bytes, 1 page
+		DS2431:   128 bytes, 4 pages
+		DS2432:   128 bytes, 4 pages
+		DS2433:   512 bytes, 16 pages
+		DS28E04:  512 bytes, 16 pages
+		DS28E07:  128 bytes, 4 pages
+		DS28EC20: 2560 bytes, 32 pages
+
 endif
