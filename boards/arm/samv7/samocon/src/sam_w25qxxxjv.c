@@ -57,7 +57,7 @@
 
 typedef enum
   {
-    MTD_TYPE_BCH,
+    MTD_TYPE_DIRECT,
     MTD_TYPE_SMARTFS,
   } mtd_types;
 
@@ -70,17 +70,17 @@ static struct mtd_partition_s g_mtd_partition_table[] =
   {
     .size    = 0x1E0000, /* !MiB, MCU boot partition */
     .devpath = "/dev/ota1",
-    .type    = MTD_TYPE_BCH,
+    .type    = MTD_TYPE_DIRECT,
   },
   {
     .size    = 0x1E0000, /* Calculate the rest of the size */
     .devpath = "/dev/ota2",
-    .type    = MTD_TYPE_BCH,
+    .type    = MTD_TYPE_DIRECT,
   },
   {
     .size    = 0,
     .devpath = "/dev/w25_rest",
-    .type    = MTD_TYPE_BCH
+    .type    = MTD_TYPE_DIRECT
   }
 };
 
@@ -296,30 +296,14 @@ int sam_w25qxxxjv_init(void)
 
       /* Use the FTL layer to wrap the MTD driver as a block driver */
 
-      if (part->type == MTD_TYPE_BCH)
+      if (part->type == MTD_TYPE_DIRECT)
         {
-          ret = ftl_initialize(W25QXXJV_MTD_MINOR + i, part->mtd);
+          ret = register_mtddriver(part->devpath, part->mtd, 0755, NULL);
           if (ret < 0)
             {
-              syslog(LOG_ERR, "ERROR: Failed to initialize FTL layer: %d\n",
-                    ret);
+              syslog(LOG_ERR, "ERROR: Failed to initialize MTD: %d\n", ret);
               return ret;
             }
-
-          /* Now create a character device on the block device */
-
-#if defined(CONFIG_BCH)
-              char blockdev[18];
-              snprintf(blockdev, sizeof(blockdev), "/dev/mtdblock%d",
-                      W25QXXJV_MTD_MINOR + i);
-              ret = bchdev_register(blockdev, part->devpath, false);
-              if (ret < 0)
-                {
-                  syslog(LOG_ERR, "ERROR: bchdev_register %s failed: %d\n",
-                        part->devpath, ret);
-                  return ret;
-                }
-#endif /* defined(CONFIG_BCH) */
         }
       else if (part->type == MTD_TYPE_SMARTFS)
         {
