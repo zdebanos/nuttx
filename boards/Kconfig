@@ -2647,7 +2647,7 @@ config ARCH_BOARD_SAMV71_XULT
 	
 config ARCH_BOARD_SAMOCON
 	bool "SaMoCon - open hardware motion controller"
-	depends on ARCH_CHIP_SAMV71Q21
+	depends on ARCH_CHIP_SAMV71Q21 || ARCH_CHIP_PIC32CZCA70144
 	---help---
 		Select samocon board
 

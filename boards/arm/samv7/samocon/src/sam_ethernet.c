@@ -115,7 +115,9 @@ void weak_function sam_netinitialize(void)
   phyinfo("sam_netinitialize: configuring %08x\n", GPIO_EMAC0_INT);
   sam_configgpio(GPIO_EMAC0_INT);
   sam_configgpio(GPIO_EMAC0_LINK_LED);
+  sam_configgpio(GPIO_PHY_RESET);
   sam_gpiowrite(GPIO_EMAC0_LINK_LED, true);
+  sam_gpiowrite(GPIO_PHY_RESET, true);
 }
 
 /****************************************************************************
